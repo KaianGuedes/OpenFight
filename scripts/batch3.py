@@ -2,8 +2,8 @@ import re,sys
 from pathlib import Path
 sys.path.insert(0,str(Path(__file__).parent))
 from jsrc import add_import
-root=Path(__file__).resolve().parents[1]/'src/main/java/yesman/epicfight'
-CMP='yesman.epicfight.platform.fabric.compat.'
+root=Path(__file__).resolve().parents[1]/'src/main/java/dev/war/openfight'
+CMP='dev.war.openfight.platform.fabric.compat.'
 # (file, [(pattern, repl, is_regex)], [imports])
 E=[]
 def rule(f,pairs,imports=()):

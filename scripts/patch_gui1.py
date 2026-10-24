@@ -1,5 +1,5 @@
 import re
-base='src/main/java/yesman/epicfight/'
+base='src/main/java/dev/war/openfight/'
 def edit(p,f):
     raw=open(base+p,'rb').read().decode('utf-8');crlf='\r\n' in raw;s=raw.replace('\r\n','\n')
     s=f(s)
@@ -55,7 +55,7 @@ def winnate(s):
 			uv[i * 2 + 1] = vertices.get(i)[3];
 		}
 
-		yesman.epicfight.client.gui.GuiShapes.texturedFan(guiGraphics, texture, xy, uv, color);
+		dev.war.openfight.client.gui.GuiShapes.texturedFan(guiGraphics, texture, xy, uv, color);
 	}
 }''')
     s=re.sub(r'import com\.mojang\.blaze3d\.platform\.GlStateManager\.\w+;\n','',s)
@@ -65,7 +65,7 @@ def winnate(s):
 edit('skill/weaponinnate/WeaponInnateSkill.java',winnate)
 def fan(s):
     s=re.sub(r'(\t\t|        )VertexConsumer vertexconsumer = guiGraphics\.bufferSource\(\)\.getBuffer\(EpicFightRenderTypes\.guiTriangle\(\)\);\n(?:.*\n)*?\1guiGraphics\.flush\(\);',
-      lambda m: m.group(1)+'yesman.epicfight.client.gui.GuiShapes.triangles(guiGraphics, new float[] {\n'+m.group(1)+'	centerX, minY, minX, centerY, centerX, maxY,\n'+m.group(1)+'	centerX, maxY, maxX, centerY, centerX, minY\n'+m.group(1)+'}, ARGB.colorFromFloat(a, r, g, b));',s)
+      lambda m: m.group(1)+'dev.war.openfight.client.gui.GuiShapes.triangles(guiGraphics, new float[] {\n'+m.group(1)+'	centerX, minY, minX, centerY, centerX, maxY,\n'+m.group(1)+'	centerX, maxY, maxX, centerY, centerX, minY\n'+m.group(1)+'}, ARGB.colorFromFloat(a, r, g, b));',s)
     s=re.sub(r'(?:\t\t|        )Matrix4f matrix4f = guiGraphics\.pose\(\)\.last\(\)\.pose\(\);\n','',s)
     return s
 edit('client/gui/widgets/ColorSlider.java',fan)

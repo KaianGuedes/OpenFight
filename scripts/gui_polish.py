@@ -1,12 +1,12 @@
 import re
 from pathlib import Path
-root=Path(__file__).resolve().parents[1]/'src/main/java/yesman/epicfight'
+root=Path(__file__).resolve().parents[1]/'src/main/java/dev/war/openfight'
 for folder in ['client/gui','epicskins/client']:
  for p in (root/folder).rglob('*.java'):
   if 'compat' in p.parts:continue
   s=p.read_text(encoding='utf-8');o=s
-  s=s.replace('yesman.epicfight.api.utils.math.ColorUtil','yesman.epicfight.api.utils.ColorUtil')
-  s=s.replace('import net.minecraft.client.gui.components.EditBox;', 'import yesman.epicfight.client.gui.compat.FilteredEditBox;')
+  s=s.replace('dev.war.openfight.api.utils.math.ColorUtil','dev.war.openfight.api.utils.ColorUtil')
+  s=s.replace('import net.minecraft.client.gui.components.EditBox;', 'import dev.war.openfight.client.gui.compat.FilteredEditBox;')
   s=re.sub(r'\bEditBox\b','FilteredEditBox',s)
   if 'extends AbstractContainerWidget' in s:
    s=re.sub(r'(class \w+[^\n]*extends AbstractContainerWidget[^\n]*\{)',r'\1\n        @Override protected int contentHeight() { return this.getHeight(); }',s)

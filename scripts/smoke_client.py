@@ -6,7 +6,26 @@ parser.add_argument('--timeout',type=int,default=360)
 parser.add_argument('--log',default='gameplay-smoke.log')
 args=parser.parse_args()
 root=Path(__file__).resolve().parents[1]
-env=dict(os.environ,JAVA_HOME=str(root.parent/'tools/jdk-25.0.4.1+1'))
+env=dict(os.environ)
+if not env.get('JAVA_HOME'):
+    fallback = root.parent/'ef-port'/'tools'/'jdk-25.0.4.1+1'
+    if fallback.is_dir():
+        env['JAVA_HOME'] = str(fallback)
+options_path = root/'run'/'options.txt'
+options_path.parent.mkdir(parents=True, exist_ok=True)
+if options_path.exists():
+    lines = options_path.read_text(encoding='utf-8').splitlines()
+else:
+    lines = []
+for key, value in {'onboardAccessibility': 'false', 'pauseOnLostFocus': 'false', 'fullscreen': 'false', 'startedCleanly': 'true'}.items():
+    prefix = key + ':'
+    for index, line in enumerate(lines):
+        if line.startswith(prefix):
+            lines[index] = prefix + value
+            break
+    else:
+        lines.append(prefix + value)
+options_path.write_text('\n'.join(lines) + '\n', encoding='utf-8')
 log=root/args.log
 started_at=time.time()
 with log.open('wb') as output:

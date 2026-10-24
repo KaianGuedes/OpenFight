@@ -1,7 +1,7 @@
 import re
 from pathlib import Path
-root=Path(__file__).resolve().parents[1]/'src/main/java/yesman/epicfight'
-LEG={'LegacyObjectSelectionList':'yesman.epicfight.client.gui.compat.LegacyObjectSelectionList','LegacyContainerObjectSelectionList':'yesman.epicfight.client.gui.compat.LegacyContainerObjectSelectionList'}
+root=Path(__file__).resolve().parents[1]/'src/main/java/dev/war/openfight'
+LEG={'LegacyObjectSelectionList':'dev.war.openfight.client.gui.compat.LegacyObjectSelectionList','LegacyContainerObjectSelectionList':'dev.war.openfight.client.gui.compat.LegacyContainerObjectSelectionList'}
 def addimp(s,imp):
     if 'import '+imp+';' in s:return s
     return re.sub(r'(package [^;]+;\n)',r'\1\nimport '+imp+';',s,1)

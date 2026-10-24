@@ -1,14 +1,14 @@
 from pathlib import Path
 import re,subprocess
 root=Path(__file__).resolve().parents[1]
-j=root/'src/main/java/yesman/epicfight'
+j=root/'src/main/java/dev/war/openfight'
 p=j/'client/gui/widgets/FilteredEditBox.java'
-p.write_bytes(subprocess.check_output(['git','show','HEAD:src/main/java/yesman/epicfight/client/gui/widgets/FilteredEditBox.java'],cwd=root))
-(j/'client/gui/compat/FilteredEditBox.java').write_text('''package yesman.epicfight.client.gui.compat;
+p.write_bytes(subprocess.check_output(['git','show','HEAD:src/main/java/dev/war/openfight/client/gui/widgets/FilteredEditBox.java'],cwd=root))
+(j/'client/gui/compat/FilteredEditBox.java').write_text('''package dev.war.openfight.client.gui.compat;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.network.chat.Component;
-public class FilteredEditBox extends yesman.epicfight.client.gui.widgets.FilteredEditBox {
+public class FilteredEditBox extends dev.war.openfight.client.gui.widgets.FilteredEditBox {
  public FilteredEditBox(Font f,Component m){super(f,150,20,m);}
  public FilteredEditBox(Font f,int w,int h,Component m){super(f,w,h,m);}
  public FilteredEditBox(Font f,int x,int y,int w,int h,Component m){super(f,x,y,w,h,m);}

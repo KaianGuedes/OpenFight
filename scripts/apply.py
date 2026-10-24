@@ -1,6 +1,6 @@
 """Apply a spec of exact-text edits.
 Format:
-### relative/path/under/yesman/epicfight.java   (or absolute-from-src/main/java if starts with yesman/)
+### relative/path/under/dev/war/openfight.java   (or absolute-from-src/main/java if starts with yesman/)
 --- old
 text (may be multi-line)
 +++ new
@@ -33,7 +33,7 @@ byfile={}
 for e in edits: byfile.setdefault(e['file'],[]).append(e)
 bad=0
 for f,es in byfile.items():
-    p=root/f if f.startswith('yesman/') else root/'yesman/epicfight'/f
+    p=root/f if f.startswith('yesman/') else root/'dev/war/openfight'/f
     if not p.exists():
         print('MISSING',f);bad+=1;continue
     raw=p.read_bytes().decode('utf-8')

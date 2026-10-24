@@ -24,9 +24,9 @@ for r in recs: byfile[r['f']][r['l']].append(r)
 
 # (sym-regex, loc-regex or None, [(pattern, replacement)], imports)
 RULES=[
- (r'^method capeTexture\(\)', 'PlayerSkin', [(None, lambda l: wrap_call(l,'.capeTexture()','SkinCompat.capeTexture(%s)'))], ['yesman.epicfight.platform.fabric.compat.SkinCompat']),
- (r'^method texture\(\)', 'PlayerSkin', [(None, lambda l: wrap_call(l,'.texture()','SkinCompat.texture(%s)'))], ['yesman.epicfight.platform.fabric.compat.SkinCompat']),
- (r'^method elytraTexture\(\)', 'PlayerSkin', [(None, lambda l: wrap_call(l,'.elytraTexture()','SkinCompat.elytraTexture(%s)'))], ['yesman.epicfight.platform.fabric.compat.SkinCompat']),
+ (r'^method capeTexture\(\)', 'PlayerSkin', [(None, lambda l: wrap_call(l,'.capeTexture()','SkinCompat.capeTexture(%s)'))], ['dev.war.openfight.platform.fabric.compat.SkinCompat']),
+ (r'^method texture\(\)', 'PlayerSkin', [(None, lambda l: wrap_call(l,'.texture()','SkinCompat.texture(%s)'))], ['dev.war.openfight.platform.fabric.compat.SkinCompat']),
+ (r'^method elytraTexture\(\)', 'PlayerSkin', [(None, lambda l: wrap_call(l,'.elytraTexture()','SkinCompat.elytraTexture(%s)'))], ['dev.war.openfight.platform.fabric.compat.SkinCompat']),
  (r'^method setInvulnerable\(', None, [(r'\.setInvulnerable\(', '.setPermanentlyInvulnerable(')], []),
  (r'^method serverLevel\(\)', None, [(r'\.serverLevel\(\)', '.level()')], []),
  (r'^method getLocation\(\)', 'SoundEvent', [(r'\.getLocation\(\)', '.location()')], []),
@@ -76,7 +76,7 @@ def line_rules(line, errs, ctx):
                     k=new.index('.getAsString()')
                     st=expr_before(new,k)
                     new=new[:st]+'TagCompat.getAsString('+new[st:k]+')'+new[k+len('.getAsString()'):]
-                ctx['imports'].add('yesman.epicfight.platform.fabric.compat.TagCompat')
+                ctx['imports'].add('dev.war.openfight.platform.fabric.compat.TagCompat')
             if sym.startswith('method parseTag('):
                 new=new.replace('TagParser.parseTag(','TagParser.parseCompoundFully(')
         if msg.startswith('no suitable method found for text(') :
@@ -101,7 +101,7 @@ def line_rules(line, errs, ctx):
         if 'method contains in class CompoundTag cannot be applied' in msg:
             new=re.sub(r'([\w.]+(?:\([^()]*\))?)\.contains\(([^,()]+(?:\([^()]*\))?),\s*(?:Tag\.)?(TAG_\w+|\d+)\)',
                        lambda m:'TagCompat.contains('+m[1]+', '+m[2]+', '+('Tag.'+m[3] if m[3].startswith('TAG_') else m[3])+')',new)
-            ctx['imports'].add('yesman.epicfight.platform.fabric.compat.TagCompat')
+            ctx['imports'].add('dev.war.openfight.platform.fabric.compat.TagCompat')
             ctx['imports'].add('net.minecraft.nbt.Tag')
     for e in errs:
         if e['msg'].startswith('cannot find symbol'):
@@ -112,7 +112,7 @@ def line_rules(line, errs, ctx):
                         else: new=re.sub(pa,rp,new)
                     for im in imps: ctx['imports'].add(im)
     new=new.replace('Tag::getAsString','TagCompat::getAsString')
-    if 'TagCompat::' in new: ctx['imports'].add('yesman.epicfight.platform.fabric.compat.TagCompat')
+    if 'TagCompat::' in new: ctx['imports'].add('dev.war.openfight.platform.fabric.compat.TagCompat')
     return new
 
 dry=len(sys.argv)>1 and sys.argv[1]=='dry'

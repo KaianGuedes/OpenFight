@@ -1,6 +1,6 @@
 from pathlib import Path
 import re
-root=Path(__file__).resolve().parents[1]/'src/main/java/yesman/epicfight'
+root=Path(__file__).resolve().parents[1]/'src/main/java/dev/war/openfight'
 def edit(f,fn):
  p=root/f;s=p.read_text(encoding='utf-8');p.write_text(fn(s),encoding='utf-8')
 def method(s,needle,new):
@@ -33,12 +33,12 @@ edit('api/utils/EntitySnapshot.java',lambda s:method(method(method(s,'public voi
     }'''),'public static void renderQuadList(','''public static void renderQuadList(PoseStack pose, VertexConsumer buffer, List<BakedQuad> quads, ItemStack stack, int light, int overlay, float alpha, Mesh.DrawingFunction function) {
         for(var quad:quads) function.putBulkData(pose.last(),quad,buffer,1F,1F,1F,alpha,light,overlay,false);
     }''').replace('import net.minecraft.client.renderer.entity.ItemRenderer;', '').replace('import net.minecraft.client.resources.model.BakedModel;', '').replace('import net.minecraft.world.item.ArmorItem;', '').replace('import net.neoforged.neoforge.client.ClientHooks;', '').replace('LivingEntityRenderer<LivingEntity, EntityModel<LivingEntity>>', 'LivingEntityRenderer').replace('vanillarenderer.getTextureLocation(entitypatch.getOriginal())', 'vanillarenderer.getTextureLocation(vanillarenderer.createRenderState(entitypatch.getOriginal(),1.0F))').replace('entitypatch.getOriginal().getArmorSlots().forEach(itemstack -> {', 'java.util.Arrays.stream(new EquipmentSlot[]{EquipmentSlot.HEAD,EquipmentSlot.CHEST,EquipmentSlot.LEGS,EquipmentSlot.FEET}).map(slot->entitypatch.getOriginal().getItemBySlot(slot)).forEach(itemstack -> {').replace('itemstack.getItem() instanceof ArmorItem', 'itemstack.has(net.minecraft.core.component.DataComponents.EQUIPPABLE)').replace('EquipmentSlot armorSlot = itemstack.getEquipmentSlot()', 'EquipmentSlot armorSlot = itemstack.get(net.minecraft.core.component.DataComponents.EQUIPPABLE).slot()'))
-(root/'client/renderer/VanillaFakeBlockRenderer.java').write_text('''package yesman.epicfight.client.renderer;
+(root/'client/renderer/VanillaFakeBlockRenderer.java').write_text('''package dev.war.openfight.client.renderer;
 import net.minecraft.client.Camera;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
-import yesman.epicfight.client.renderer.compat.*;
+import dev.war.openfight.client.renderer.compat.*;
 public class VanillaFakeBlockRenderer implements FakeBlockRenderer {
  public void render(Camera camera,PoseStack pose,MultiBufferSource buffers,Level level,BlockPos pos,float r,float g,float b,float a) {
   var state=level.getBlockState(pos); var cameraPos=camera.position();
@@ -49,7 +49,7 @@ public class VanillaFakeBlockRenderer implements FakeBlockRenderer {
 }
 ''',encoding='utf-8')
 p=root/'client/renderer/blockentity/FractureBlockRenderer.java';s=p.read_text(encoding='utf-8');a=s.index('\t\tfloat turnBackTime');b=s.index('\n\t\tthis.blockRenderDispatcher.renderBreakingTexture',a);calc=s[a:b]
-p.write_text('''package yesman.epicfight.client.renderer.blockentity;
+p.write_text('''package dev.war.openfight.client.renderer.blockentity;
 import org.joml.*;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.renderer.*;
@@ -60,9 +60,9 @@ import net.minecraft.client.renderer.feature.ModelFeatureRenderer;
 import net.minecraft.client.renderer.rendertype.RenderTypes;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.util.Mth;
-import yesman.epicfight.api.utils.math.MathUtils;
-import yesman.epicfight.world.level.block.entity.FractureBlockEntity;
-import yesman.epicfight.client.renderer.compat.BlockGeometry;
+import dev.war.openfight.api.utils.math.MathUtils;
+import dev.war.openfight.world.level.block.entity.FractureBlockEntity;
+import dev.war.openfight.client.renderer.compat.BlockGeometry;
 public class FractureBlockRenderer implements BlockEntityRenderer<FractureBlockEntity,FractureBlockRenderer.State> {
  public static class State extends BlockEntityRenderState { Matrix4f transform; java.util.List<net.minecraft.client.resources.model.geometry.BakedQuad> quads; }
  public FractureBlockRenderer(BlockEntityRendererProvider.Context context) {}
@@ -84,7 +84,7 @@ public class FractureBlockRenderer implements BlockEntityRenderer<FractureBlockE
  }
 }
 ''',encoding='utf-8')
-(root/'client/renderer/entity/NoopLivingEntityRenderer.java').write_text('''package yesman.epicfight.client.renderer.entity;
+(root/'client/renderer/entity/NoopLivingEntityRenderer.java').write_text('''package dev.war.openfight.client.renderer.entity;
 import net.minecraft.client.renderer.entity.*;
 import net.minecraft.client.renderer.entity.state.LivingEntityRenderState;
 import net.minecraft.client.model.EntityModel;
@@ -94,11 +94,11 @@ import net.minecraft.world.entity.LivingEntity;
 public class NoopLivingEntityRenderer<T extends LivingEntity> extends LivingEntityRenderer<T,LivingEntityRenderState,EntityModel<LivingEntityRenderState>> {
  public NoopLivingEntityRenderer(EntityRendererProvider.Context context,float shadow) {super(context,new EntityModel<LivingEntityRenderState>(new ModelPart(java.util.List.of(),java.util.Map.of())){},shadow);}
  public LivingEntityRenderState createRenderState(){return new LivingEntityRenderState();}
- public Identifier getTextureLocation(LivingEntityRenderState state){return yesman.epicfight.client.renderer.patched.entity.PWitherRenderer.WITHER_INVULNERABLE_LOCATION;}
+ public Identifier getTextureLocation(LivingEntityRenderState state){return dev.war.openfight.client.renderer.patched.entity.PWitherRenderer.WITHER_INVULNERABLE_LOCATION;}
  // RenderEngine's dispatcher hook replaces this model with the original Epic Fight mesh.
 }
 ''',encoding='utf-8')
 edit('client/renderer/entity/WitherGhostRenderer.java',lambda s:s.replace('public Identifier getTextureLocation(WitherGhostClone entity)', 'public Identifier getTextureLocation(net.minecraft.client.renderer.entity.state.LivingEntityRenderState entity)'))
 edit('client/renderer/entity/WitherSkeletonMinionRenderer.java',lambda s:s.replace('public Identifier getTextureLocation(WitherSkeleton entity)', 'public Identifier getTextureLocation(net.minecraft.client.renderer.entity.state.SkeletonRenderState entity)'))
-edit('client/renderer/entity/DroppedNetherStarRenderer.java',lambda s:s.replace('public void render(ItemEntity entityIn, float yRot, float partialTicks, PoseStack poseStack, MultiBufferSource multiBufferSource, int packedLight)', 'public void submit(net.minecraft.client.renderer.entity.state.ItemEntityRenderState state, PoseStack poseStack, net.minecraft.client.renderer.SubmitNodeCollector collector, net.minecraft.client.renderer.state.level.CameraRenderState camera)').replace('super.render(entityIn, yRot, partialTicks, poseStack, multiBufferSource, packedLight)', 'super.submit(state, poseStack, collector, camera)').replace('entityIn.getBbHeight()', 'state.boundingBoxHeight').replace('(float) entityIn.getAge() + partialTicks', 'state.ageInTicks').replace('entityIn.bobOffs', 'state.bobOffset').replace('entityIn.tickCount + partialTicks', 'state.ageInTicks').replace('VertexConsumer vertexBuilder = multiBufferSource.getBuffer(RenderTypes.lightning());', 'var multiBufferSource = new yesman.epicfight.client.renderer.compat.SubmitBufferSource(collector);\n        VertexConsumer vertexBuilder = multiBufferSource.getBuffer(RenderTypes.lightning());').replace('\t\tposeStack.popPose();', '\t\tposeStack.popPose();\n        multiBufferSource.endBatch();'))
+edit('client/renderer/entity/DroppedNetherStarRenderer.java',lambda s:s.replace('public void render(ItemEntity entityIn, float yRot, float partialTicks, PoseStack poseStack, MultiBufferSource multiBufferSource, int packedLight)', 'public void submit(net.minecraft.client.renderer.entity.state.ItemEntityRenderState state, PoseStack poseStack, net.minecraft.client.renderer.SubmitNodeCollector collector, net.minecraft.client.renderer.state.level.CameraRenderState camera)').replace('super.render(entityIn, yRot, partialTicks, poseStack, multiBufferSource, packedLight)', 'super.submit(state, poseStack, collector, camera)').replace('entityIn.getBbHeight()', 'state.boundingBoxHeight').replace('(float) entityIn.getAge() + partialTicks', 'state.ageInTicks').replace('entityIn.bobOffs', 'state.bobOffset').replace('entityIn.tickCount + partialTicks', 'state.ageInTicks').replace('VertexConsumer vertexBuilder = multiBufferSource.getBuffer(RenderTypes.lightning());', 'var multiBufferSource = new dev.war.openfight.client.renderer.compat.SubmitBufferSource(collector);\n        VertexConsumer vertexBuilder = multiBufferSource.getBuffer(RenderTypes.lightning());').replace('\t\tposeStack.popPose();', '\t\tposeStack.popPose();\n        multiBufferSource.endBatch();'))
 print('Native block, item snapshot and special entity rendering applied')

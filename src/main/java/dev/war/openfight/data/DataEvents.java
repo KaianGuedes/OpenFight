@@ -1,0 +1,33 @@
+package dev.war.openfight.data;
+
+import java.util.concurrent.CompletableFuture;
+
+import net.minecraft.core.HolderLookup;
+import net.minecraft.data.DataGenerator;
+import net.minecraft.data.PackOutput;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.common.data.ExistingFileHelper;
+import net.neoforged.neoforge.data.event.GatherDataEvent;
+import dev.war.openfight.data.recipes.pack.EpicFightRecipeProvider;
+import dev.war.openfight.data.tags.EpicFightBlockTagsProvider;
+import dev.war.openfight.data.tags.EpicFightItemTagsProvider;
+import dev.war.openfight.main.EpicFightMod;
+
+@EventBusSubscriber(modid = EpicFightMod.NAMESPACE)
+public final class DataEvents {
+	private DataEvents() {}
+	
+	@SubscribeEvent
+	public static void epicfight$gatherData(GatherDataEvent event) {
+		DataGenerator gen = event.getGenerator();
+        PackOutput packOutput = gen.getPackOutput();
+        CompletableFuture<HolderLookup.Provider> lookupProvider = event.getLookupProvider();
+        ExistingFileHelper existingFileHelper = event.getExistingFileHelper();
+        
+        gen.addProvider(event.includeServer(), new EpicFightRecipeProvider(packOutput, lookupProvider));
+        EpicFightBlockTagsProvider blockTagsProvider = new EpicFightBlockTagsProvider(packOutput, lookupProvider, existingFileHelper);;
+        gen.addProvider(event.includeServer(), blockTagsProvider);
+        gen.addProvider(event.includeServer(), new EpicFightItemTagsProvider(packOutput, lookupProvider, blockTagsProvider.contentsGetter(), existingFileHelper));
+	}
+}

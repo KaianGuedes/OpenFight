@@ -1,6 +1,6 @@
 import re
 from pathlib import Path
-root=Path(__file__).resolve().parents[1]/'src/main/java/yesman/epicfight'
+root=Path(__file__).resolve().parents[1]/'src/main/java/dev/war/openfight'
 p=root/'data/loot/EpicFightLootTables.java'
 raw=p.read_bytes().decode('utf-8');crlf='\r\n' in raw
 t=raw.replace('\r\n','\n')
@@ -35,7 +35,7 @@ p.write_bytes(t.encode('utf-8'))
 
 # OnSkillBookDroppedByEntity -> plain helper using Fabric MODIFY_DROPS
 p=root/'data/loot/OnSkillBookDroppedByEntity.java'
-p.write_text('''package yesman.epicfight.data.loot;
+p.write_text('''package dev.war.openfight.data.loot;
 
 import java.util.HashMap;
 import java.util.List;
@@ -50,8 +50,8 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.LootTable;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
-import yesman.epicfight.api.event.EpicFightEventHooks;
-import yesman.epicfight.api.event.types.registry.RegisterMobSkillBookLootTableEvent;
+import dev.war.openfight.api.event.EpicFightEventHooks;
+import dev.war.openfight.api.event.types.registry.RegisterMobSkillBookLootTableEvent;
 
 /**
  * Port of the NeoForge global loot modifier: appends skill book drops by entity type to any loot table
@@ -93,7 +93,7 @@ public final class OnSkillBookDroppedByEntity {
 ''',encoding='utf-8')
 # remove global loot modifier registry
 p=root/'registry/entries/EpicFightGlobalLootModifiers.java'
-p.write_text('''package yesman.epicfight.registry.entries;
+p.write_text('''package dev.war.openfight.registry.entries;
 
 /** NeoForge global loot modifiers have no registry on Fabric; see data.loot.OnSkillBookDroppedByEntity. */
 public final class EpicFightGlobalLootModifiers {

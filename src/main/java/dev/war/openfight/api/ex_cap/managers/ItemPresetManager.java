@@ -1,0 +1,94 @@
+package dev.war.openfight.api.ex_cap.managers;
+
+import com.google.common.collect.Maps;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.item.Item;
+import org.jetbrains.annotations.ApiStatus;
+import net.minecraft.resources.Identifier;
+import dev.war.openfight.EpicFight;
+import dev.war.openfight.api.ex_cap.data.modifier.WeaponModifier;
+import dev.war.openfight.api.ex_cap.modules.core.events.ExCapBuilderCreationEvent;
+import dev.war.openfight.registry.EpicFightRegistries;
+import dev.war.openfight.registry.deferred.holders.DeferredPreset;
+import dev.war.openfight.world.capabilities.item.CapabilityItem;
+import dev.war.openfight.world.capabilities.item.WeaponCapability;
+import dev.war.openfight.world.capabilities.item.WeaponCapabilityPresets;
+
+import java.util.Map;
+import java.util.function.Function;
+
+@ApiStatus.Experimental
+public class ItemPresetManager {
+    private static final Map<Identifier, CapabilityItem.Builder<?>> BUILDERS = Maps.newHashMap();
+
+    public static CapabilityItem.Builder<?> get(Identifier id) {
+        return BUILDERS.get(id);
+    }
+
+    public static CapabilityItem.Builder<?> get(DeferredPreset<? extends CapabilityItem.Builder<?>> entry)
+    {
+        return get(entry.getId());
+    }
+
+
+    @ApiStatus.Internal
+    public static void acceptEvent(@Deprecated ExCapBuilderCreationEvent event) {
+        BUILDERS.clear();
+        for (var entry : EpicFightRegistries.BUILDERS.entrySet()) {
+            entry.getValue().identifier(entry.getKey().identifier());
+            EpicFight.LOGGER.info("Pulling {} from register", entry.getKey().identifier());
+            if (entry.getValue() instanceof WeaponCapability.Builder builder)
+            {
+                builder.exportBuiltMovesets();
+                builder.exportBuiltConditionals();
+            }
+            ExCapManager.addAcceptor(entry.getKey().identifier());
+            BUILDERS.put(entry.getKey().identifier(), entry.getValue());
+        }
+        BUILDERS.putAll(event.getBuilders());
+        BUILDERS.values().forEach( builder -> {
+            if (builder instanceof WeaponCapability.Builder weaponBuilder)
+            {
+                EpicFightRegistries.WEAPON_DATA.listElements().forEach(
+                        weaponBuilder::registerCustomData
+                );
+            }
+        });
+    }
+
+    @ApiStatus.Internal
+    public static void export(Map<Identifier, Function<Item, ? extends CapabilityItem.Builder<?>>> event)
+    {
+        BUILDERS.forEach((entry, builder) -> event.put(entry, item -> WeaponCapabilityPresets.registerPreset(builder, item)));
+    }
+
+    public static void add(Identifier id, CompoundTag cTag)
+    {
+        //TODO: Implement
+    }
+
+    public static void modify(WeaponModifier modifier)
+    {
+        for (var target : modifier.targets())
+        {
+            CapabilityItem.Builder<?> builder = BUILDERS.get(target);
+            modifier.weaponCustomData().forEach(builder::setCustomDataInternal);
+            if (builder instanceof WeaponCapability.Builder weaponBuilder)
+            {
+                modifier.conditionalModifier().forEach((resourceLocation, operation) ->
+                {
+                    if (operation == WeaponModifier.Operation.APPEND)
+                    {
+                        weaponBuilder.addConditionals(resourceLocation);
+                    }
+                    if (operation == WeaponModifier.Operation.REMOVE)
+                    {
+                        weaponBuilder.removeConditional(resourceLocation);
+                    }
+                });
+                modifier.overrideModifiers().accept(weaponBuilder);
+                weaponBuilder.addMovesets(modifier.movesetModifier());
+            }
+        }
+    }
+}

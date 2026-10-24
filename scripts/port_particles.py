@@ -1,6 +1,6 @@
 import re
 from pathlib import Path
-root=Path(__file__).resolve().parents[1]/'src/main/java/yesman/epicfight'
+root=Path(__file__).resolve().parents[1]/'src/main/java/dev/war/openfight'
 for p in (root/'client/particle').glob('*.java'):
  if p.name in ['LegacyTextureSheetParticle.java','ParticleBridge.java','EpicFightParticleRenderTypes.java']:continue
  s=p.read_text(encoding='utf-8')
@@ -11,14 +11,14 @@ for p in (root/'client/particle').glob('*.java'):
  s=s.replace('MultiBufferSource.BufferSource buffers = Minecraft.getInstance().renderBuffers().bufferSource();', 'var buffers = ParticleBridge.buffers();').replace('buffers.endLastBatch()', 'buffers.endBatch()')
  s=s.replace('RenderSystem.setShaderTexture(0, this.texture);','// Texture binding belongs to the extracted RenderType (EpicFightParticleRenderTypes).')
  p.write_text(s,encoding='utf-8')
-(root/'client/particle/EpicFightParticleRenderTypes.java').write_text('''package yesman.epicfight.client.particle;
+(root/'client/particle/EpicFightParticleRenderTypes.java').write_text('''package dev.war.openfight.client.particle;
 import java.util.function.Function;
 import net.minecraft.client.particle.ParticleRenderType;
 import net.minecraft.client.renderer.rendertype.RenderType;
 import net.minecraft.client.renderer.rendertype.RenderTypes;
 import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.resources.Identifier;
-import yesman.epicfight.client.renderer.EpicFightRenderTypes;
+import dev.war.openfight.client.renderer.EpicFightRenderTypes;
 public final class EpicFightParticleRenderTypes {
  public static final ParticleRenderType OPAQUE=new ParticleRenderType("epicfight:opaque","EFO");
  public static final ParticleRenderType TRANSLUCENT=new ParticleRenderType("epicfight:translucent","EFT");
@@ -36,5 +36,5 @@ public final class EpicFightParticleRenderTypes {
  }
 }
 ''',encoding='utf-8')
-p=root/'client/events/engine/RenderEngine.java';s=p.read_text(encoding='utf-8').replace('public void renderAfterLevel(LevelRenderContext context) {','public void renderAfterLevel(LevelRenderContext context) {\n        yesman.epicfight.client.particle.ParticleBridge.submit(context.submitNodeCollector(), this.minecraft.gameRenderer.mainCamera(), this.minecraft.getDeltaTracker().getGameTimeDeltaPartialTick(false));');p.write_text(s,encoding='utf-8')
+p=root/'client/events/engine/RenderEngine.java';s=p.read_text(encoding='utf-8').replace('public void renderAfterLevel(LevelRenderContext context) {','public void renderAfterLevel(LevelRenderContext context) {\n        dev.war.openfight.client.particle.ParticleBridge.submit(context.submitNodeCollector(), this.minecraft.gameRenderer.mainCamera(), this.minecraft.getDeltaTracker().getGameTimeDeltaPartialTick(false));');p.write_text(s,encoding='utf-8')
 print('Particle simulation and extraction bridge applied')

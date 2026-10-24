@@ -1,6 +1,6 @@
 import re
 from pathlib import Path
-root=Path(__file__).resolve().parents[1]/'src/main/java/yesman/epicfight'
+root=Path(__file__).resolve().parents[1]/'src/main/java/dev/war/openfight'
 def edit(rel,f):
     p=root/rel
     raw=p.read_bytes().decode('utf-8');crlf='\r\n' in raw;s=raw.replace('\r\n','\n')
@@ -73,7 +73,7 @@ edit('client/events/engine/ControlEngine.java',ce)
 
 def re_(s):
     s=s.replace('this.minecraft.options.hideGui','this.minecraft.gui.hud.isHidden()')
-    s=s.replace('import yesman.epicfight.compat.MinecraftMod;\n','')
+    s=s.replace('import dev.war.openfight.compat.MinecraftMod;\n','')
     return s
 edit('client/events/engine/RenderEngine.java',re_)
 print('ok')

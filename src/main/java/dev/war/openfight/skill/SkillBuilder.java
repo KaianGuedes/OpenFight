@@ -1,0 +1,62 @@
+package dev.war.openfight.skill;
+
+import net.minecraft.resources.Identifier;
+import net.minecraft.world.item.CreativeModeTab;
+import dev.war.openfight.api.event.EpicFightEventHooks;
+import dev.war.openfight.api.event.types.registry.SkillBuilderModificationEvent;
+import dev.war.openfight.main.EpicFightExtensions;
+import dev.war.openfight.skill.Skill.ActivateType;
+import dev.war.openfight.skill.Skill.Resource;
+
+import java.util.function.Function;
+
+@SuppressWarnings("unchecked")
+public class SkillBuilder<B extends SkillBuilder<?>> {
+	protected final Function<B, ? extends Skill> constructor;
+	protected Identifier registryName;
+	protected CreativeModeTab tab;
+	protected SkillCategory category;
+	protected ActivateType activateType = ActivateType.ONE_SHOT;
+	protected Resource resource = Resource.NONE;
+
+	public SkillBuilder(Function<B, ? extends Skill> constructor) {
+		this.constructor = constructor;
+	}
+	
+	public B setRegistryName(Identifier registryName) {
+		this.registryName = registryName;
+		return (B)this;
+	}
+	
+	/**
+	 *  Leave the value as null if you want your skill's creative tab is decided by {@link EpicFightExtensions}
+	 */
+	public B setCreativeTab(CreativeModeTab tab) {
+		this.tab = tab;
+		return (B)this;
+	}
+	
+	public B setCategory(SkillCategory category) {
+		this.category = category;
+		return (B)this;
+	}
+	
+	public B setActivateType(ActivateType activateType) {
+		this.activateType = activateType;
+		return (B)this;
+	}
+	
+	public B setResource(Resource resource) {
+		this.resource = resource;
+		return (B)this;
+	}
+
+	public <T extends Skill> T build(Identifier key) {
+		this.setRegistryName(key);
+
+        SkillBuilderModificationEvent builderModificationEvent = new SkillBuilderModificationEvent(key, this);
+        EpicFightEventHooks.Registry.MODIFY_SKILL_BUILDER.post(builderModificationEvent);
+
+		return (T)this.constructor.apply((B)this);
+	}
+}

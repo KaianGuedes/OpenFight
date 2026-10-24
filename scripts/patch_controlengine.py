@@ -1,6 +1,6 @@
 import re
 from pathlib import Path
-base=Path(__file__).resolve().parents[1]/'src/main/java/yesman/epicfight/client/events/engine'
+base=Path(__file__).resolve().parents[1]/'src/main/java/dev/war/openfight/client/events/engine'
 p=base/'ControlEngine.java'
 raw=p.read_bytes().decode('utf-8');crlf='\r\n' in raw;s=raw.replace('\r\n','\n')
 s=re.sub(r'import net\.neoforged[^\n]*\n','',s)
