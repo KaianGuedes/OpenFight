@@ -1,6 +1,6 @@
 from pathlib import Path
 import re,json
-root=Path(__file__).resolve().parents[1];j=root/'src/main/java/yesman/epicfight'
+root=Path(__file__).resolve().parents[1];j=root/'src/main/java/dev/war/openfight'
 def edit(f,fn):
  p=j/f;s=p.read_text(encoding='utf-8');p.write_text(fn(s),encoding='utf-8')
 def method(s,needle,new):
@@ -9,13 +9,13 @@ def method(s,needle,new):
  return s[:a]+new+s[e:]
 edit('mixin/client/MixinEntityRenderDispatcher.java',lambda s:s.replace('renderer/state/CameraRenderState', 'renderer/state/level/CameraRenderState'))
 edit('mixin/client/MixinGui.java',lambda s:s.replace('import net.minecraft.client.gui.Gui;', 'import net.minecraft.client.gui.Hud;\nimport com.mojang.renderpearl.api.pipeline.RenderPipeline;').replace('Gui.class', 'Hud.class').replace('renderCrosshair(L', 'extractCrosshair(L').replace('guiGraphics.blitSprite(Gui.CROSSHAIR_SPRITE,', 'guiGraphics.blitSprite(RenderPipelines.CROSSHAIR, Identifier.withDefaultNamespace("hud/crosshair"),').replace('blitSprite(Lnet/minecraft/resources/Identifier;IIII)V', 'blitSprite(Lcom/mojang/renderpearl/api/pipeline/RenderPipeline;Lnet/minecraft/resources/Identifier;IIII)V').replace('GuiGraphicsExtractor guiGraphics, Identifier sprite,', 'GuiGraphicsExtractor guiGraphics, RenderPipeline pipeline, Identifier sprite,').replace('original.call(guiGraphics, sprite,', 'original.call(guiGraphics, pipeline, sprite,').replace('RenderPipelines.GUI_TEXTURED, RenderPipelines.GUI_TEXTURED, EntityUI.BATTLE_ICON, (guiGraphics.guiWidth() - 15) / 2, (float)((float)(0)), (float)((float)(240)),', 'RenderPipelines.GUI_TEXTURED, EntityUI.BATTLE_ICON, (guiGraphics.guiWidth() - 15) / 2, (guiGraphics.guiHeight() - 15) / 2, 0F, 240F,').replace('if (setupBlend) {\n\t\t\tRenderSystem.enableBlend();\n\t\t\tRenderSystem.blendFuncSeparate(GlStateManager.SourceFactor.ONE_MINUS_DST_COLOR, GlStateManager.DestFactor.ONE_MINUS_SRC_COLOR, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);\n\t\t}', '').replace('if (setupBlend) RenderSystem.defaultBlendFunc();',''))
-(j/'mixin/client/MixinCamera.java').write_text('''package yesman.epicfight.mixin.client;
+(j/'mixin/client/MixinCamera.java').write_text('''package dev.war.openfight.mixin.client;
 import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
 import org.spongepowered.asm.mixin.*;
 import org.spongepowered.asm.mixin.injection.*;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import yesman.epicfight.api.client.camera.EpicFightCameraAPI;
+import dev.war.openfight.api.client.camera.EpicFightCameraAPI;
 @Mixin(Camera.class)
 public abstract class MixinCamera {
  @Shadow private boolean detached;
@@ -42,19 +42,19 @@ edit('mixin/client/MixinMinecraft.java',lambda s:method(s,'@WrapOperation(\n    
         }
     }''').replace('LocalPlayer;swing(Lnet/minecraft/world/InteractionHand;)V','LocalPlayer;swing(Lnet/minecraft/world/InteractionHand;Lnet/minecraft/world/item/component/SwingAnimation;Z)Z'))
 # Picking is now one hook in Minecraft for both frame and tick updates.
-(j/'mixin/client/MixinGameRenderer.java').write_text('''package yesman.epicfight.mixin.client;
+(j/'mixin/client/MixinGameRenderer.java').write_text('''package dev.war.openfight.mixin.client;
 /** The original frame-pick override was merged into MixinMinecraft.pick for 26.3. */
 public final class MixinGameRenderer { private MixinGameRenderer() {} }
 ''',encoding='utf-8')
-(j/'mixin/client/MixinLevelRenderer.java').write_text('''package yesman.epicfight.mixin.client;
+(j/'mixin/client/MixinLevelRenderer.java').write_text('''package dev.war.openfight.mixin.client;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.*;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.state.EntityRenderState;
 import net.minecraft.world.entity.Entity;
-import yesman.epicfight.api.client.camera.EpicFightCameraAPI;
-import yesman.epicfight.config.ClientConfig;
+import dev.war.openfight.api.client.camera.EpicFightCameraAPI;
+import dev.war.openfight.config.ClientConfig;
 @Mixin(EntityRenderer.class)
 public abstract class MixinLevelRenderer {
  @Inject(method="extractRenderState(Lnet/minecraft/world/entity/Entity;Lnet/minecraft/client/renderer/entity/state/EntityRenderState;F)V",at=@At("TAIL"))
@@ -65,11 +65,11 @@ public abstract class MixinLevelRenderer {
 ''',encoding='utf-8')
 edit('mixin/client/MixinLightTexture.java',lambda s:s.replace('import net.minecraft.client.renderer.LightTexture;', 'import net.minecraft.client.renderer.LightmapRenderStateExtractor;').replace('LightTexture.class', 'LightmapRenderStateExtractor.class').replace('updateLightTexture(F)V', 'extract(Lnet/minecraft/client/renderer/state/LightmapRenderState;F)V'))
 # Native billboards share SINGLE_QUADS; custom geometry order is now handled by ParticleBridge.
-(j/'mixin/client/MixinParticleEngine.java').write_text('''package yesman.epicfight.mixin.client;
+(j/'mixin/client/MixinParticleEngine.java').write_text('''package dev.war.openfight.mixin.client;
 /** Obsolete queue-order hook: 26.3 groups billboards and ParticleBridge submits custom geometry. */
 public final class MixinParticleEngine { private MixinParticleEngine() {} }
 ''',encoding='utf-8')
-(j/'mixin/client/MixinAgeableListModel.java').write_text('''package yesman.epicfight.mixin.client;
+(j/'mixin/client/MixinAgeableListModel.java').write_text('''package dev.war.openfight.mixin.client;
 /** The deleted AgeableListModel head/body invoker had no remaining consumers. */
 public interface MixinAgeableListModel {}
 ''',encoding='utf-8')

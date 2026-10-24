@@ -4,7 +4,7 @@ root=Path(__file__).resolve().parents[1]
 for p in (root/'src/main/java').rglob('*.java'):
     old=s=p.read_text(encoding='utf-8')
     for cls in ['EntityAttributeCreationEvent','EntityAttributeModificationEvent']:
-        s=s.replace('net.neoforged.neoforge.event.entity.'+cls,'yesman.epicfight.platform.fabric.event.'+cls)
+        s=s.replace('net.neoforged.neoforge.event.entity.'+cls,'dev.war.openfight.platform.fabric.event.'+cls)
     if p.name=='EpicFightAttributes.java':
         s=re.sub(r'import net\.neoforged\.[^;]+;\n','',s)
         s=re.sub(r'@EventBusSubscriber\([^\n]+\)\s*','',s)

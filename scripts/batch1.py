@@ -3,7 +3,7 @@ from pathlib import Path
 sys.path.insert(0,str(Path(__file__).parent))
 from jsrc import *
 root=Path(__file__).resolve().parents[1]/'src/main/java'
-CMP='yesman.epicfight.platform.fabric.compat.'
+CMP='dev.war.openfight.platform.fabric.compat.'
 def instanceof_rewrite(text,cls,fn):
     pat=re.compile(r'\binstanceof\s+'+cls+r'\b(?!\s*\.class)')
     while True:

@@ -3,9 +3,9 @@ import re
 root=Path(__file__).resolve().parents[1]
 for p in (root/'src/main/java').rglob('*.java'):
     old=s=p.read_text(encoding='utf-8')
-    s=s.replace('net.neoforged.neoforge.common.ModConfigSpec','yesman.epicfight.platform.fabric.config.ModConfigSpec')
-    s=s.replace('net.neoforged.neoforge.registries.RegistryBuilder','yesman.epicfight.platform.fabric.registry.RegistryBuilder')
-    s=s.replace('net.neoforged.neoforge.registries.callback.','yesman.epicfight.platform.fabric.registry.callback.')
+    s=s.replace('net.neoforged.neoforge.common.ModConfigSpec','dev.war.openfight.platform.fabric.config.ModConfigSpec')
+    s=s.replace('net.neoforged.neoforge.registries.RegistryBuilder','dev.war.openfight.platform.fabric.registry.RegistryBuilder')
+    s=s.replace('net.neoforged.neoforge.registries.callback.','dev.war.openfight.platform.fabric.registry.callback.')
     if p.name=='EpicFightRegistries.java':
         s=re.sub(r'import net\.neoforged\.[^;]+;\n','',s)
         s=re.sub(r'@EventBusSubscriber\([^\n]*\)\n','',s)

@@ -1,6 +1,6 @@
 import re
 from pathlib import Path
-root=Path(__file__).resolve().parents[1]/'src/main/java/yesman/epicfight/client/renderer/patched/layer'
+root=Path(__file__).resolve().parents[1]/'src/main/java/dev/war/openfight/client/renderer/patched/layer'
 def edit(name,f):
     p=root/name
     raw=p.read_bytes().decode('utf-8');crlf='\r\n' in raw;s=raw.replace('\r\n','\n')
@@ -31,7 +31,7 @@ def patchedlayer(s):
 			vanillaLayer.submit(poseStack, collector, packedLight, state, yRot, xRot);
 		}
 	}''')
-    return imp(s,'net.minecraft.client.renderer.SubmitNodeCollector','net.minecraft.client.renderer.entity.state.EntityRenderState','yesman.epicfight.client.renderer.compat.EpicRenderContext')
+    return imp(s,'net.minecraft.client.renderer.SubmitNodeCollector','net.minecraft.client.renderer.entity.state.EntityRenderState','dev.war.openfight.client.renderer.compat.EpicRenderContext')
 edit('PatchedLayer.java',patchedlayer)
 
 def original(s):
@@ -60,7 +60,7 @@ def arrow(s):
 	}
 
 '''+s[b:]
-    return imp(s,'net.minecraft.client.renderer.SubmitNodeCollector','net.minecraft.client.renderer.entity.state.EntityRenderState','net.minecraft.client.renderer.state.level.CameraRenderState','yesman.epicfight.client.renderer.compat.EpicRenderContext')
+    return imp(s,'net.minecraft.client.renderer.SubmitNodeCollector','net.minecraft.client.renderer.entity.state.EntityRenderState','net.minecraft.client.renderer.state.level.CameraRenderState','dev.war.openfight.client.renderer.compat.EpicRenderContext')
 edit('PatchedArrowLayer.java',arrow)
 edit('PatchedBeeStingerLayer.java',lambda s:s.replace('BeeStingerLayer<?, ?>','BeeStingerLayer<?>'))
 edit('PatchedStuckInBodyLayer.java',lambda s:s)
@@ -119,12 +119,12 @@ def villager(s):
 
 			Identifier typeKey = BuiltInRegistries.VILLAGER_TYPE.getKey(villagerdata.type().value());
 			this.mesh.get().draw(postStack, buffer, RenderTypes.entityCutout(typeKey.withPath(path -> "textures/entity/zombie_villager/type/" + path + ".png")),
-					packedLight, 1.0F, 1.0F, 1.0F, 1.0F, LivingEntityRenderer.getOverlayCoords(yesman.epicfight.client.renderer.compat.EpicRenderContext.state() instanceof net.minecraft.client.renderer.entity.state.LivingEntityRenderState lstate ? lstate : null, 0.0F), entitypatch.getArmature(), poses);
+					packedLight, 1.0F, 1.0F, 1.0F, 1.0F, LivingEntityRenderer.getOverlayCoords(dev.war.openfight.client.renderer.compat.EpicRenderContext.state() instanceof net.minecraft.client.renderer.entity.state.LivingEntityRenderState lstate ? lstate : null, 0.0F), entitypatch.getArmature(), poses);
 
 			if (!villagerdata.profession().is(VillagerProfession.NONE)) {
 				Identifier professionKey = villagerdata.profession().unwrapKey().orElseThrow().identifier();
 				this.mesh.get().draw(postStack, buffer, RenderTypes.entityCutout(professionKey.withPath(path -> "textures/entity/zombie_villager/profession/" + path + ".png")),
-						packedLight, 1.0F, 1.0F, 1.0F, 1.0F, LivingEntityRenderer.getOverlayCoords(yesman.epicfight.client.renderer.compat.EpicRenderContext.state() instanceof net.minecraft.client.renderer.entity.state.LivingEntityRenderState lstate ? lstate : null, 0.0F), entitypatch.getArmature(), poses);
+						packedLight, 1.0F, 1.0F, 1.0F, 1.0F, LivingEntityRenderer.getOverlayCoords(dev.war.openfight.client.renderer.compat.EpicRenderContext.state() instanceof net.minecraft.client.renderer.entity.state.LivingEntityRenderState lstate ? lstate : null, 0.0F), entitypatch.getArmature(), poses);
 			}
 		}
 '''+s[b:]

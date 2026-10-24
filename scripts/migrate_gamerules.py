@@ -1,6 +1,6 @@
 from pathlib import Path
 root=Path(__file__).resolve().parents[1]
-src=root/'src/main/java/yesman/epicfight'
+src=root/'src/main/java/dev/war/openfight'
 p=src/'world/gamerule/EpicFightGameRules.java'
 s=p.read_text(encoding='utf-8')
 s=s[:s.index('\tpublic static <Type, Config extends')]

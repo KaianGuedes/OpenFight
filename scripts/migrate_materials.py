@@ -1,10 +1,10 @@
 from pathlib import Path
 import re
 root=Path(__file__).resolve().parents[1]
-src=root/'src/main/java/yesman/epicfight'
+src=root/'src/main/java/dev/war/openfight'
 
 p=src/'registry/entries/EpicFightArmorMaterials.java'
-p.write_text('''package yesman.epicfight.registry.entries;
+p.write_text('''package dev.war.openfight.registry.entries;
 import java.util.Map;
 import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
@@ -30,7 +30,7 @@ s=p.read_text(encoding='utf-8').replace('        EpicFightArmorMaterials.REGISTR
 p.write_text(s,encoding='utf-8')
 
 p=src/'world/capabilities/item/WeaponCapabilityPresets.java'
-s=p.read_text(encoding='utf-8').replace('import net.minecraft.world.item.TieredItem;','import yesman.epicfight.platform.fabric.item.ItemMaterial;')
+s=p.read_text(encoding='utf-8').replace('import net.minecraft.world.item.TieredItem;','import dev.war.openfight.platform.fabric.item.ItemMaterial;')
 a=s.index('\t\tif (tier instanceof ToolMaterial vanillaTier)')
 b=s.index('\t\tdouble sqrt',a)
 s=s[:a]+'''        if (tier == ToolMaterial.WOOD || tier == ToolMaterial.GOLD) return 0;
@@ -43,7 +43,7 @@ s=s.replace('if (item instanceof TieredItem tieredItem) {','ToolMaterial materia
 p.write_text(s,encoding='utf-8')
 
 p=src/'world/damagesource/ExtraDamageInstance.java'
-s=p.read_text(encoding='utf-8').replace('import net.minecraft.world.item.TieredItem;','import yesman.epicfight.platform.fabric.item.ItemMaterial;')
+s=p.read_text(encoding='utf-8').replace('import net.minecraft.world.item.TieredItem;','import dev.war.openfight.platform.fabric.item.ItemMaterial;')
 s=s.replace('if (itemstack.getItem() instanceof TieredItem tieredItem) {','var material = ItemMaterial.of(itemstack.getItem());\n            if (material != null) {').replace('tieredItem.getTier()','material')
 p.write_text(s,encoding='utf-8')
 

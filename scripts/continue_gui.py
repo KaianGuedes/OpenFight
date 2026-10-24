@@ -1,7 +1,7 @@
 """One-time continuation of the 26.3 GUI migration; source contracts checked in mcsrc."""
 import re
 from pathlib import Path
-root=Path(__file__).resolve().parents[1]/'src/main/java/yesman/epicfight'
+root=Path(__file__).resolve().parents[1]/'src/main/java/dev/war/openfight'
 def edit(rel,fn):
  p=root/rel;s=p.read_text(encoding='utf-8');n=fn(s)
  if s!=n:p.write_text(n,encoding='utf-8')
@@ -27,7 +27,7 @@ for folder in ['client/gui','epicskins/client']:
    s=s.replace('registry.containsValue(item)','registry.getKey(item) != null')
    s=s.replace('this.registry.get(', 'this.registry.getValue(')
    s=s.replace('SharedConstants.getCurrentVersion().getId()','SharedConstants.getCurrentVersion().id()')
-   s=s.replace('EntityType.byString(', 'yesman.epicfight.client.gui.compat.GuiPort.entityType(')
+   s=s.replace('EntityType.byString(', 'dev.war.openfight.client.gui.compat.GuiPort.entityType(')
    s=re.sub(r'(?m)^.*Minecraft.getInstance\(\).getMainRenderTarget\(\).enableStencil\(\);\n','',s)
    s=re.sub(r'(?m)^.*RenderSystem\.(stencilOp|stencilFunc|stencilMask|clear)\([^\n]*\);\n','',s)
    return s

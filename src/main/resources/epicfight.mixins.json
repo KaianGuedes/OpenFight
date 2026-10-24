@@ -2,7 +2,7 @@
   "required": true,
   "minVersion": "0.8",
   "compatibilityLevel": "JAVA_25",
-  "package": "yesman.epicfight.mixin",
+  "package": "dev.war.openfight.mixin",
   "client": [
     "client.fabric.ClientEntityTickMixin",
     "client.MixinBossHealthOverlay",

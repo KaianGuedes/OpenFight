@@ -1,10 +1,10 @@
 from pathlib import Path
 import re
 root=Path(__file__).resolve().parents[1]
-src=root/'src/main/java/yesman/epicfight'
+src=root/'src/main/java/dev/war/openfight'
 
 p=src/'client/input/EpicFightKeyMappings.java'
-s=p.read_text(encoding='utf-8').replace('import net.neoforged.neoforge.client.settings.KeyConflictContext;','import yesman.epicfight.platform.fabric.client.ContextKeyMapping;')
+s=p.read_text(encoding='utf-8').replace('import net.neoforged.neoforge.client.settings.KeyConflictContext;','import dev.war.openfight.platform.fabric.client.ContextKeyMapping;')
 s=s.replace('new KeyMapping(','new ContextKeyMapping(').replace('KeyConflictContext.','ContextKeyMapping.Context.')
 p.write_text(s,encoding='utf-8')
 
@@ -14,7 +14,7 @@ s=re.sub(r'public static final String (\w+) = LangKeys.KEY_\w+;',lambda m:'publi
 p.write_text(s,encoding='utf-8')
 
 p=src/'client/input/CombatKeyMapping.java'
-s=p.read_text(encoding='utf-8').replace('import net.neoforged.neoforge.client.settings.KeyConflictContext;','import yesman.epicfight.platform.fabric.client.ContextKeyMapping;')
+s=p.read_text(encoding='utf-8').replace('import net.neoforged.neoforge.client.settings.KeyConflictContext;','import dev.war.openfight.platform.fabric.client.ContextKeyMapping;')
 s=s.replace('extends KeyMapping','extends ContextKeyMapping').replace('String category','KeyMapping.Category category')
 s=s.replace('KeyConflictContext.IN_GAME','ContextKeyMapping.Context.IN_GAME')
 s=s.replace('isActiveAndMatches','matches')
@@ -22,7 +22,7 @@ s=s.replace('    @Override\n    public boolean matches', '    @Override\n    pro
 p.write_text(s,encoding='utf-8')
 
 p=src/'world/item/WeaponItem.java'
-p.write_text('''package yesman.epicfight.world.item;
+p.write_text('''package dev.war.openfight.world.item;
 
 import java.util.List;
 import net.minecraft.core.HolderSet;

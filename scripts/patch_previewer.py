@@ -1,6 +1,6 @@
 import re,sys
 from pathlib import Path
-root=Path(__file__).resolve().parents[1]/'src/main/java/yesman/epicfight/client/gui'
+root=Path(__file__).resolve().parents[1]/'src/main/java/dev/war/openfight/client/gui'
 
 def block_end(s,start):
     i=s.index('{',start);d=0

@@ -1,13 +1,13 @@
 from pathlib import Path
 import re
-root=Path(__file__).resolve().parents[1]/'src/main/java/yesman/epicfight'
+root=Path(__file__).resolve().parents[1]/'src/main/java/dev/war/openfight'
 def edit(f,fn):
  p=root/f;s=p.read_text(encoding='utf-8');p.write_text(fn(s),encoding='utf-8')
 def method(s,needle,new):
  a=s.index(needle);b=s.index('{',a);d=1;e=b+1
  while d:d+=(s[e]=='{')-(s[e]=='}');e+=1
  return s[:a]+new+s[e:]
-edit('client/gui/datapack/widgets/ResizableEditBox.java',lambda s:s.replace('extends yesman.epicfight.client.gui.widgets.FilteredEditBox','extends FilteredEditBox'))
+edit('client/gui/datapack/widgets/ResizableEditBox.java',lambda s:s.replace('extends dev.war.openfight.client.gui.widgets.FilteredEditBox','extends FilteredEditBox'))
 for f in ['client/input/InputUtils.java','api/client/input/InputManager.java','api/client/event/impl/VanillaGUIEventHooks.java']:
  edit(f,lambda s:re.sub(r'(\b\w+(?:\.\w+)*).getKey\(\)',r'InputConstants.getKey(\1.saveString())',s).replace('import org.lwjgl.glfw.GLFW;','').replace('import net.minecraft.client.player.Input;', '').replace('import net.neoforged.neoforge.client.ClientHooks;', '').replace('import net.neoforged.neoforge.client.event.InputEvent;', ''))
 edit('api/client/input/InputManager.java',lambda s:method(s,'private static boolean isPhysicalKeyDown(','''private static boolean isPhysicalKeyDown(@NotNull KeyMapping keyMapping) {

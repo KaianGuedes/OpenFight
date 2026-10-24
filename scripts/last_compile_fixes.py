@@ -1,5 +1,5 @@
 from pathlib import Path
-root=Path(__file__).resolve().parents[1];j=root/'src/main/java/yesman/epicfight'
+root=Path(__file__).resolve().parents[1];j=root/'src/main/java/dev/war/openfight'
 def edit(f,fn):
  p=j/f;s=p.read_text(encoding='utf-8');p.write_text(fn(s),encoding='utf-8')
 edit('client/world/capabilites/entitypatch/player/LocalPlayerPatch.java',lambda s:s.replace('combatItem.getItem().canAttackBlock(bs,', 'combatItem.canDestroyBlock(bs,'))

@@ -1,0 +1,29 @@
+package dev.war.openfight.client.renderer.patched.entity;
+
+import net.minecraft.client.model.monster.enderman.EndermanModel;
+import net.minecraft.client.renderer.entity.EndermanRenderer;
+import net.minecraft.client.renderer.entity.EntityRendererProvider;
+import net.minecraft.client.renderer.entity.layers.EnderEyesLayer;
+import net.minecraft.resources.Identifier;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.monster.Enderman;
+import dev.war.openfight.api.asset.AssetAccessor;
+import dev.war.openfight.api.client.model.Meshes;
+import dev.war.openfight.client.mesh.EndermanMesh;
+import dev.war.openfight.client.renderer.patched.layer.PatchedEyesLayer;
+import dev.war.openfight.world.capabilities.entitypatch.mob.EndermanPatch;
+
+public class PEndermanRenderer extends PatchedLivingEntityRenderer<Enderman, EndermanPatch, EndermanModel<?>, EndermanRenderer, EndermanMesh> {
+	private static final Identifier ENDERMAN_EYE_TEXTURE = Identifier.withDefaultNamespace("textures/entity/enderman/enderman_eyes.png");
+	
+	public PEndermanRenderer(EntityRendererProvider.Context context, EntityType<?> entityType) {
+		super(context, entityType);
+		
+		this.addPatchedLayer(EnderEyesLayer.class, new PatchedEyesLayer<>(ENDERMAN_EYE_TEXTURE, Meshes.ENDERMAN));
+	}
+	
+	@Override
+	public AssetAccessor<EndermanMesh> getDefaultMesh() {
+		return Meshes.ENDERMAN;
+	}
+}

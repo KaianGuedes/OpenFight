@@ -1,6 +1,6 @@
 import re
 from pathlib import Path
-root=Path(__file__).resolve().parents[1]/'src/main/java/yesman/epicfight'
+root=Path(__file__).resolve().parents[1]/'src/main/java/dev/war/openfight'
 def edit(rel,fn):
  p=root/rel;s=p.read_text(encoding='utf-8');n=fn(s)
  if s!=n:p.write_text(n,encoding='utf-8')
@@ -21,7 +21,7 @@ for folder in ['client/gui','epicskins/client']:
    s=s.replace('.keyPressed(keyCode, scanCode, modifiers)', '.keyPressed(event)')
    s=s.replace('registry.holders().map(Holder::value)', 'registry.stream()')
    s=s.replace('.getSkin().texture()', '.getSkin().body().texturePath()').replace('playerSkin.texture()', 'playerSkin.body().texturePath()')
-   s=s.replace('net.minecraft.util.ARGB.lerp(t, startColor, endColor)', '(int)yesman.epicfight.api.utils.math.ColorUtil.mixPackedARGB(t, startColor, endColor)')
+   s=s.replace('net.minecraft.util.ARGB.lerp(t, startColor, endColor)', '(int)dev.war.openfight.api.utils.math.ColorUtil.mixPackedARGB(t, startColor, endColor)')
    s=s.replace('this.renderTransparentBackground(guiGraphics)', 'this.extractTransparentBackground(guiGraphics)')
    return s
   edit(str(p.relative_to(root)),fix)
@@ -32,7 +32,7 @@ edit('client/gui/widgets/WidgetTable.java',lambda s:s.replace('this.getFocused()
 for f in ['client/gui/widgets/ColorSlider.java','client/gui/widgets/ColorDeterminator.java']:
  edit(f,lambda s:s.replace('widget.getFGColor()', '(widget.active ? 0xFFFFFFFF : 0xFFA0A0A0)'))
 edit('client/gui/widgets/SettingTitle.java',lambda s:method(s,'private static void fillGradientLeftToRight(','''private static void fillGradientLeftToRight(GuiGraphicsExtractor guiGraphics, int x1, int y1, int x2, int y2, int pColorFrom, int pColorTo) {
-        for (int x = x1; x < x2; x++) guiGraphics.fill(x, y1, x+1, y2, (int)yesman.epicfight.api.utils.math.ColorUtil.mixPackedARGB((double)(x-x1)/Math.max(1,x2-x1-1), pColorFrom, pColorTo));
+        for (int x = x1; x < x2; x++) guiGraphics.fill(x, y1, x+1, y2, (int)dev.war.openfight.api.utils.math.ColorUtil.mixPackedARGB((double)(x-x1)/Math.max(1,x2-x1-1), pColorFrom, pColorTo));
     }'''))
 edit('client/gui/screen/config/HUDLocationsScreen.java',lambda s:method(s,'public void drawOutline(','''public void drawOutline(GuiGraphicsExtractor guiGraphics) {
             int x=this.getX()-1, y=this.getY()-1, r=this.getRight()+1, b=this.getBottom()+1, color=0xFF45A6F4;
@@ -50,7 +50,7 @@ edit('client/gui/screen/SkillEditScreen.java',lambda s:s.replace('protected void
 edit('client/gui/widgets/EmoteWheelTab.java',lambda s:s.replace('PoseStack poseStack', 'org.joml.Matrix3x2fStack poseStack').replace('poseStack.translate(', 'poseStack.translate(').replace('public void extractWidgetRenderState(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {\n            this.theme', 'public void extractContents(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {\n            this.theme').replace('protected void extractWidgetRenderState(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {\n            super.extractWidgetRenderState', 'protected void extractContents(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {\n            super.extractContents'))
 edit('client/gui/screen/config/EpicFightSettingScreen.java',lambda s:s.replace('abstract class SettingTabPage implements Tab {','abstract class SettingTabPage implements Tab {\n        public Component getTabExtraNarration() { return Component.empty(); }'))
 for f in ['client/gui/screen/config/EpicFightSettingScreen.java','client/gui/datapack/screen/DatapackEditScreen.java']:
- edit(f,lambda s:s.replace('TabNavigationBar.builder(this.tabManager, 0, 0, this.width, 24).addTabs(', 'yesman.epicfight.client.gui.compat.GuiPort.tabs(this.tabManager, this.width, '))
+ edit(f,lambda s:s.replace('TabNavigationBar.builder(this.tabManager, 0, 0, this.width, 24).addTabs(', 'dev.war.openfight.client.gui.compat.GuiPort.tabs(this.tabManager, this.width, '))
 edit('client/gui/BattleModeGui.java',lambda s:re.sub(r'import com.mojang.blaze3d.platform.GlStateManager[^;]*;\n','',s))
 edit('client/gui/HealthBar.java',lambda s:s.replace('import net.neoforged.neoforge.common.Tags.EntityTypes;', '').replace('EntityTypes.BOSSES','net.minecraft.tags.TagKey.create(net.minecraft.core.registries.Registries.ENTITY_TYPE, net.minecraft.resources.Identifier.fromNamespaceAndPath("c", "bosses"))'))
 edit('client/gui/screen/overlay/OverlayManager.java',lambda s:s.replace('Minecraft.renderNames()', '!Minecraft.getInstance().options.hideGui'))

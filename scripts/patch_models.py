@@ -1,6 +1,6 @@
 import re,sys
 from pathlib import Path
-root=Path(__file__).resolve().parents[1]/'src/main/java/yesman/epicfight'
+root=Path(__file__).resolve().parents[1]/'src/main/java/dev/war/openfight'
 NONGENERIC=['CreeperModel','DrownedModel','HoglinModel','IronGolemModel','PlayerModel','SpiderModel','WitchModel','WitherBossModel']
 STATEGENERIC=['EndermanModel','HumanoidModel','IllagerModel','ZombieVillagerModel']
 dirs=['client/renderer','client/mesh','client/gui','api/client','client/world','world/capabilities','epicskins','compat/_none_']

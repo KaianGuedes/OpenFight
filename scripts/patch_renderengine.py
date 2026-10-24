@@ -1,6 +1,6 @@
 import re
 from pathlib import Path
-p=Path(__file__).resolve().parents[1]/'src/main/java/yesman/epicfight/client/events/engine/RenderEngine.java'
+p=Path(__file__).resolve().parents[1]/'src/main/java/dev/war/openfight/client/events/engine/RenderEngine.java'
 raw=p.read_bytes().decode('utf-8');crlf='\r\n' in raw;s=raw.replace('\r\n','\n')
 
 # imports
@@ -383,9 +383,9 @@ import net.minecraft.client.renderer.entity.state.EntityRenderState;
 import net.minecraft.client.renderer.state.level.CameraRenderState;
 import net.minecraft.world.item.TooltipFlag;
 import net.fabricmc.fabric.api.client.rendering.v1.level.LevelRenderContext;
-import yesman.epicfight.client.renderer.compat.EpicRenderContext;
-import yesman.epicfight.client.renderer.compat.StateEntityAccess;
-import yesman.epicfight.client.renderer.compat.SubmitBufferSource;
+import dev.war.openfight.client.renderer.compat.EpicRenderContext;
+import dev.war.openfight.client.renderer.compat.StateEntityAccess;
+import dev.war.openfight.client.renderer.compat.SubmitBufferSource;
 '''
 s=s.replace('import java.util.*;',imports+'import java.util.*;',1)
 if crlf:s=s.replace('\n','\r\n')

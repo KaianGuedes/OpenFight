@@ -1,6 +1,6 @@
 import re
 from pathlib import Path
-root=Path(__file__).resolve().parents[1]/'src/main/java/yesman/epicfight'
+root=Path(__file__).resolve().parents[1]/'src/main/java/dev/war/openfight'
 def edit(rel,f):
     p=root/rel
     raw=p.read_bytes().decode('utf-8');crlf='\r\n' in raw;s=raw.replace('\r\n','\n')
@@ -52,7 +52,7 @@ def btn(s):
     s=re.sub(r'(class\s+\w+(?:<[^>]*>)?\s+extends\s+)Button\b(?!\.)',r'\1LegacyButton',s)
     s=s.replace('Button.builder(','LegacyButton.legacyBuilder(') if 'build(LearnButton::new)' in s else s
     s=in_button_classes(s)
-    if 'LegacyButton' in s: s=addimp(s,'yesman.epicfight.client.gui.compat.LegacyButton')
+    if 'LegacyButton' in s: s=addimp(s,'dev.war.openfight.client.gui.compat.LegacyButton')
     return s
 for f in btnfiles:
     edit(f,btn)
@@ -63,7 +63,7 @@ def rb(s):
     s=s.replace('super(builder);\n\t\t\n\t\tthis.x1 = builder.x1;','super(builder);\n\t\t\n\t\tthis.x1 = builder.x1;')
     return s
 edit('client/gui/datapack/widgets/ResizableButton.java',rb)
-edit('client/gui/widgets/TextButton.java',lambda s:s.replace('extends LegacyButton','extends Button').replace('import yesman.epicfight.client.gui.compat.LegacyButton;\n',''))
+edit('client/gui/widgets/TextButton.java',lambda s:s.replace('extends LegacyButton','extends Button').replace('import dev.war.openfight.client.gui.compat.LegacyButton;\n',''))
 # no-arg onPress callers
 for f in ['client/gui/screen/config/ItemsPreferenceScreen.java','client/gui/widgets/EmoteWheelTab.java','client/gui/screen/EmoteWheelScreen.java','client/gui/screen/SkillEditScreen.java']:
     edit(f,lambda s:re.sub(r'\.onPress\(\)',r'.onPress((net.minecraft.client.input.InputWithModifiers) null)',s).replace('this.onPress((net.minecraft.client.input.InputWithModifiers) null);','this.onPress((net.minecraft.client.input.InputWithModifiers) null);'))

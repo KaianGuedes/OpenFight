@@ -1,7 +1,7 @@
 from pathlib import Path
 import re
 root=Path(__file__).resolve().parents[1]
-src=root/'src/main/java/yesman/epicfight'
+src=root/'src/main/java/dev/war/openfight'
 
 # Only the optional integrations and data generators are omitted; gameplay/render source is retained.
 p=src/'compat/MinecraftMod.java'
@@ -13,11 +13,11 @@ s=s.replace('return ModList.get().getModFileById(modId).versionString();','retur
 s=s.replace('public @NotNull Class<? extends ICompatModule> getCompatibilityModule()', 'public @Nullable Class<? extends ICompatModule> getCompatibilityModule()')
 s=s.replace('private final @NotNull Class<? extends ICompatModule> compatibilityModule','private final @Nullable Class<? extends ICompatModule> compatibilityModule')
 p.write_text(s,encoding='utf-8')
-(src/'compat/ICompatModule.java').write_text('package yesman.epicfight.compat;\n\n/** Optional integrations are disabled for this personal Fabric port. */\npublic interface ICompatModule {}\n',encoding='utf-8')
+(src/'compat/ICompatModule.java').write_text('package dev.war.openfight.compat;\n\n/** Optional integrations are disabled for this personal Fabric port. */\npublic interface ICompatModule {}\n',encoding='utf-8')
 
 for name in ['EpicFightInputAction','MinecraftInputAction']:
     p=src/f'api/client/input/action/{name}.java'
-    s=p.read_text(encoding='utf-8').replace('import yesman.epicfight.compat.controlify.EpicFightControlifyControllerMod;\n','')
+    s=p.read_text(encoding='utf-8').replace('import dev.war.openfight.compat.controlify.EpicFightControlifyControllerMod;\n','')
     s=re.sub(r'public (?:@NotNull )?Optional<@NotNull ControllerBinding> controllerBinding\(\) \{.*?return Optional\.of\(EpicFightControlifyControllerMod.getBinding\(this\)\);\s*\}', '''public Optional<@NotNull ControllerBinding> controllerBinding() {
         return Optional.empty(); // Controlify integration is omitted; keyboard and mouse remain available.
     }''',s,flags=re.S)
@@ -36,7 +36,7 @@ s=p.read_text(encoding='utf-8')
 a=s.index('    public EpicFightMod(IEventBus')
 # Preserve all upstream public utility methods preceding the legacy constructor.
 methods=s[s.index('\t/// @deprecated Use'):a]
-header='''package yesman.epicfight.main;
+header='''package dev.war.openfight.main;
 
 import java.io.IOException;
 import java.util.Comparator;
@@ -50,29 +50,29 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.server.packs.PackType;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
-import yesman.epicfight.EpicFight;
-import yesman.epicfight.api.animation.*;
-import yesman.epicfight.api.data.reloader.*;
-import yesman.epicfight.api.event.EpicFightEventHooks;
-import yesman.epicfight.api.ex_cap.listeners.*;
-import yesman.epicfight.config.*;
-import yesman.epicfight.data.loot.EpicFightLootTables;
-import yesman.epicfight.gameasset.*;
-import yesman.epicfight.network.*;
-import yesman.epicfight.platform.fabric.FabricModPlatform;
-import yesman.epicfight.platform.fabric.event.FabricGameplayEvents;
-import yesman.epicfight.platform.fabric.registry.RegistryBuilder;
-import yesman.epicfight.platform.fabric.network.PacketDistributor;
-import yesman.epicfight.registry.EpicFightRegistries;
-import yesman.epicfight.registry.entries.*;
-import yesman.epicfight.server.commands.*;
-import yesman.epicfight.skill.*;
-import yesman.epicfight.world.capabilities.EpicFightCapabilities;
-import yesman.epicfight.world.capabilities.entitypatch.*;
-import yesman.epicfight.world.capabilities.item.*;
-import yesman.epicfight.world.capabilities.item.CapabilityItem.Styles;
-import yesman.epicfight.world.capabilities.item.CapabilityItem.WeaponCategories;
-import yesman.epicfight.world.gamerule.EpicFightGameRules;
+import dev.war.openfight.EpicFight;
+import dev.war.openfight.api.animation.*;
+import dev.war.openfight.api.data.reloader.*;
+import dev.war.openfight.api.event.EpicFightEventHooks;
+import dev.war.openfight.api.ex_cap.listeners.*;
+import dev.war.openfight.config.*;
+import dev.war.openfight.data.loot.EpicFightLootTables;
+import dev.war.openfight.gameasset.*;
+import dev.war.openfight.network.*;
+import dev.war.openfight.platform.fabric.FabricModPlatform;
+import dev.war.openfight.platform.fabric.event.FabricGameplayEvents;
+import dev.war.openfight.platform.fabric.registry.RegistryBuilder;
+import dev.war.openfight.platform.fabric.network.PacketDistributor;
+import dev.war.openfight.registry.EpicFightRegistries;
+import dev.war.openfight.registry.entries.*;
+import dev.war.openfight.server.commands.*;
+import dev.war.openfight.skill.*;
+import dev.war.openfight.world.capabilities.EpicFightCapabilities;
+import dev.war.openfight.world.capabilities.entitypatch.*;
+import dev.war.openfight.world.capabilities.item.*;
+import dev.war.openfight.world.capabilities.item.CapabilityItem.Styles;
+import dev.war.openfight.world.capabilities.item.CapabilityItem.WeaponCategories;
+import dev.war.openfight.world.gamerule.EpicFightGameRules;
 
 /** Fabric common entrypoint. Rendering/input bridges are initialized separately on the physical client. */
 public class EpicFightMod implements ModInitializer {

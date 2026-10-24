@@ -1,6 +1,6 @@
 import re
 from pathlib import Path
-root=Path(__file__).resolve().parents[1]/'src/main/java/yesman/epicfight'
+root=Path(__file__).resolve().parents[1]/'src/main/java/dev/war/openfight'
 CALLS={
  'RenderType.entityCutoutNoCull(':'RenderTypes.entityCutout(',
  'RenderType.entityTranslucent(':'RenderTypes.entityTranslucent(',
@@ -10,7 +10,7 @@ CALLS={
  'RenderType.lines()':'RenderTypes.lines()',
  'RenderType.eyes(':'RenderTypes.eyes(',
  'RenderType.armorCutoutNoCull(':'RenderTypes.armorCutoutNoCull(',
- 'RenderType.armorEntityGlint()':'RenderTypes.armorCutoutNoCullGlint(net.minecraft.client.renderer.entity.layers.EquipmentLayerRenderer.class == null ? null : yesman.epicfight.EpicFight.identifier("textures/misc/enchanted_glint_armor.png"))',
+ 'RenderType.armorEntityGlint()':'RenderTypes.armorCutoutNoCullGlint(net.minecraft.client.renderer.entity.layers.EquipmentLayerRenderer.class == null ? null : dev.war.openfight.EpicFight.identifier("textures/misc/enchanted_glint_armor.png"))',
  'RenderType.outline(':'RenderTypes.outline(',
  'RenderType.energySwirl(':'RenderTypes.energySwirl(',
  'RenderType.entityDecal(':'RenderTypes.entityCutoutZOffset(',

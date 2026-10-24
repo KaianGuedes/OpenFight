@@ -37,7 +37,7 @@ def rewrite(s,method,factory):
 count=0
 for p in (root/'src/main/java').rglob('*.java'):
     old=s=p.read_text(encoding='utf-8')
-    s=rewrite(s,'holderOrThrow',lambda receiver,args:'yesman.epicfight.platform.fabric.registry.RegistryHolders.of('+receiver+', '+args+')')
+    s=rewrite(s,'holderOrThrow',lambda receiver,args:'dev.war.openfight.platform.fabric.registry.RegistryHolders.of('+receiver+', '+args+')')
     s=rewrite(s,'getEnchantmentLevel',lambda receiver,args:'net.minecraft.world.item.enchantment.EnchantmentHelper.getItemEnchantmentLevel('+args+', '+receiver+')')
     aliases={'MOVEMENT_SPEED':'SPEED','MOVEMENT_SLOWDOWN':'SLOWNESS','DIG_SPEED':'HASTE','DIG_SLOWDOWN':'MINING_FATIGUE','DAMAGE_BOOST':'STRENGTH','HEAL':'INSTANT_HEALTH','HARM':'INSTANT_DAMAGE','JUMP':'JUMP_BOOST','CONFUSION':'NAUSEA','DAMAGE_RESISTANCE':'RESISTANCE'}
     for a,b in aliases.items(): s=re.sub(r'\bMobEffects\.'+a+r'\b','MobEffects.'+b,s)
