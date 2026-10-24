@@ -1,6 +1,6 @@
 ﻿# OpenFight rebrand progress
 
-Status: IN PROGRESS
+Status: DONE
 
 ## Done
 - Confirmed `upstream/` is pinned to `a78aa24b72e90a9d09f5fd61925e4369d117abaf`.
@@ -11,7 +11,11 @@ Status: IN PROGRESS
 - `gradlew clean build` passes with the mixin audit and component verifications.
 
 ## In progress
-- `scripts/smoke_client.py` passes in-world: 600 combat ticks, 60 attacks, six weapon switches, three mode toggles, and runtime mixin audit. The script seeds a private run's onboarding/focus options for deterministic first launch.
+- None.
 
 ## Next
-- Re-run the final build/audit with all changes staged, commit work in small local commits, remove `WORKER.md`, and mark this file DONE.
+- None. Final local commits are present; no remote was contacted. `WORKER.md` has been deleted.
+
+## Final verification
+- `gradlew clean build`: PASS, including `verifyNoArrAssets`, 47 mixin target checks, and the port component verification tasks.
+- `scripts/smoke_client.py`: PASS; title/create-world flow, joined player, combo data, 600 combat ticks, 60 attacks, six weapon switches, three mode toggles, and runtime mixin audit.
