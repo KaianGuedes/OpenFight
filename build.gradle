@@ -75,6 +75,7 @@ tasks.register('verifyPortConfig', JavaExec) {
     args layout.buildDirectory.dir('port-verification/config').get().asFile.absolutePath
 }
 tasks.processResources {
+    inputs.dir(file('upstream/src/main/resources/assets/epicfight/models/item'))
     exclude 'META-INF/**', 'epicfight-compat.*.mixins.json', 'epicfight-platform.neoforge.mixins.json'
     exclude 'kubejs.plugins.txt', 'shouldersurfing_plugin.json'
     exclude 'assets/minecraft/animated_layers/player/waveycapes.json'
@@ -152,7 +153,7 @@ tasks.register('verifyNoArrAssets') {
         }
 
         def overlayModels = file('overlay/assets/epicfight/models')
-        if (overlayModels.exists() && fileTree(overlayModels).files) {
+        if (overlayModels.exists()) {
             throw new GradleException('Upstream-derived models must be generated into build resources; overlay/assets/epicfight/models must remain empty.')
         }
 
