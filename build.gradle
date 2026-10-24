@@ -1,0 +1,91 @@
+plugins { id 'net.fabricmc.fabric-loom' version '1.18-SNAPSHOT' }
+repositories { mavenCentral() }
+group = 'yesman.epicfight'
+version = '21.17.3-26.3-port-dev'
+base { archivesName = 'epicfight-fabric' }
+tasks.named('jar') { from 'LICENSE', 'LICENSE-ASSETS' }
+loom { accessWidenerPath = file('src/main/resources/epicfight.accesswidener') }
+dependencies {
+    minecraft 'com.mojang:minecraft:26.3'
+    implementation 'net.fabricmc:fabric-loader:0.19.5'
+    implementation 'net.fabricmc.fabric-api:fabric-api:0.162.0+26.3'
+}
+java { toolchain { languageVersion = JavaLanguageVersion.of(25) } }
+tasks.withType(JavaCompile).configureEach {
+    options.release = 25
+    options.encoding = 'UTF-8'
+    options.compilerArgs += ['-Xmaxerrs', '10000', '-Xmaxwarns', '30', '-proc:none']
+}
+sourceSets.main.resources.srcDir('src/generated/resources')
+// TASK.md explicitly omits optional integrations and datagen. Combat, skills and rendering remain in main.
+sourceSets.main.java {
+    exclude 'yesman/epicfight/compat/*/**'
+    exclude 'yesman/epicfight/platform/neoforge/**'
+    exclude 'yesman/epicfight/data/DataEvents.java', 'yesman/epicfight/data/recipes/**', 'yesman/epicfight/data/tags/**'
+}
+// Explicit progress check; the full main source tree remains compiled by build.
+tasks.register('verifyPortAdapters', JavaCompile) {
+    source = fileTree('src/main/java') {
+        include 'yesman/epicfight/platform/fabric/**/*.java'
+        exclude 'yesman/epicfight/platform/fabric/item/ItemMaterial.java'
+        exclude 'yesman/epicfight/platform/fabric/event/FabricGameplayEvents.java'
+        include 'yesman/epicfight/platform/ModPlatform.java'
+        include 'yesman/epicfight/platform/client/*.java'
+    }
+    classpath = sourceSets.main.compileClasspath
+    options.sourcepath = files()
+    destinationDirectory = layout.buildDirectory.dir('classes/portAdapters')
+}
+tasks.register('compilePortVerification', JavaCompile) {
+    dependsOn 'verifyPortAdapters', 'verifyPortMath'
+    source = fileTree('src/portTest/java') { include '**/*.java' }
+    classpath = sourceSets.main.compileClasspath + files(layout.buildDirectory.dir('classes/portAdapters'), layout.buildDirectory.dir('classes/portMath'))
+    destinationDirectory = layout.buildDirectory.dir('classes/portVerification')
+}
+tasks.register('verifyPortMath', JavaCompile) {
+    source = fileTree('src/main/java') {
+        include 'yesman/epicfight/api/utils/math/*.java'
+        include 'yesman/epicfight/api/animation/Joint.java', 'yesman/epicfight/api/animation/JointTransform.java'
+        include 'yesman/epicfight/EpicFight.java', 'yesman/epicfight/platform/ModPlatform.java', 'yesman/epicfight/platform/ModPlatformProvider.java'
+    }
+    classpath = sourceSets.main.compileClasspath
+    options.sourcepath = files()
+    destinationDirectory = layout.buildDirectory.dir('classes/portMath')
+}
+tasks.register('verifyPortTransforms', JavaExec) {
+    dependsOn 'compilePortVerification'
+    mainClass = 'yesman.epicfight.port.TransformVerification'
+    classpath = sourceSets.main.compileClasspath + files(layout.buildDirectory.dir('classes/portMath'), layout.buildDirectory.dir('classes/portVerification'))
+}
+tasks.register('verifyPortPackMetadata', JavaExec) {
+    dependsOn 'compilePortVerification', 'processResources'
+    mainClass = 'yesman.epicfight.port.PackMetadataVerification'
+    classpath = sourceSets.main.compileClasspath + files(layout.buildDirectory.dir('classes/portVerification'))
+    args layout.buildDirectory.dir('resources/main').get().asFile.absolutePath
+}
+tasks.register('verifyPortEntityNbt', JavaExec) {
+    dependsOn 'compilePortVerification'
+    mainClass = 'yesman.epicfight.port.EntityNbtVerification'
+    classpath = sourceSets.main.compileClasspath + files(layout.buildDirectory.dir('classes/portAdapters'), layout.buildDirectory.dir('classes/portVerification'))
+}
+tasks.register('verifyPortConfig', JavaExec) {
+    dependsOn 'compilePortVerification'
+    mainClass = 'yesman.epicfight.port.ConfigVerification'
+    classpath = sourceSets.main.compileClasspath + files(layout.buildDirectory.dir('classes/portAdapters'), layout.buildDirectory.dir('classes/portVerification'))
+    args layout.buildDirectory.dir('port-verification/config').get().asFile.absolutePath
+}
+tasks.processResources {
+    exclude 'META-INF/**', 'epicfight-compat.*.mixins.json', 'epicfight-platform.neoforge.mixins.json'
+    exclude 'kubejs.plugins.txt', 'shouldersurfing_plugin.json'
+    exclude 'assets/minecraft/animated_layers/player/waveycapes.json'
+    exclude 'data/**/recipes/**', 'data/**/loot_tables/**', 'data/**/advancements/**'
+    exclude 'data/**/tags/items/**', 'data/**/tags/blocks/**', 'data/**/tags/entity_types/**', 'data/**/tags/damage_types/**'
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+}
+apply from: 'port-access.gradle'
+tasks.named('check') { dependsOn 'verifyPortConfig', 'verifyPortTransforms', 'verifyPortPackMetadata', 'verifyPortEntityNbt', 'auditMixinTargets' }
+
+// Explicit development-only title-screen smoke run, with runtime mixin audit and screenshot.
+if (providers.gradleProperty('portSmoke').isPresent()) {
+    loom.runs.client { vmArg '-Depicfight.portSmoke=true'; vmArg '-Dmixin.debug.verbose=true' }
+}

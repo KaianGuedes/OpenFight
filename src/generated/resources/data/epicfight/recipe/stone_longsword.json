@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "key": {
+    "#": "minecraft:stone_sword",
+    "X": "#minecraft:stone_tool_materials"
+  },
+  "pattern": [
+    "  X",
+    " X ",
+    "#  "
+  ],
+  "result": {
+    "count": 1,
+    "id": "epicfight:stone_longsword"
+  }
+}

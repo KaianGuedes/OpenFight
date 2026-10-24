@@ -1,0 +1,63 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "compatibilityLevel": "JAVA_25",
+  "package": "yesman.epicfight.mixin",
+  "client": [
+    "client.fabric.ClientEntityTickMixin",
+    "client.MixinBossHealthOverlay",
+    "client.MixinAbstractContainerEventHandler",
+    "client.MixinFirstPersonHandsAndItemsRenderer",
+    "client.MixinCamera",
+    "client.MixinClientCommonPacketListenerImpl",
+    "client.MixinClientPacketListener",
+    "client.MixinEnderDragonRenderer",
+    "client.MixinEntityRenderState",
+    "client.MixinEntityRenderDispatcher",
+    "client.MixinEntityRenderer",
+    "client.MixinEntityRendererCapture",
+    "client.MixinGui",
+    "client.MixinInventory",
+    "client.MixinInputConstants",
+    "client.MixinKeyboardHandler",
+    "client.MixinLevelRenderer",
+    "client.MixinLightTexture",
+    "client.MixinLivingEntityRenderer",
+    "client.MixinLocalPlayer",
+    "client.MixinMeshData",
+    "client.MixinMinecraft",
+    "client.MixinMouseHandler",
+    "client.MixinOptions",
+    "client.MixinThrownTridentRenderer",
+    "client.MixinEntityRendererReload"
+  ],
+  "mixins": [
+    "common.MixinCrossbowAttack",
+    "common.MixinDamageSources",
+    "common.MixinEntity",
+    "common.MixinEndermanTeleport",
+    "common.MixinLivingEntity",
+    "common.MixinMob",
+    "common.MixinPlayer",
+    "common.MixinProjectile",
+    "common.MixinProjectileImpact",
+    "common.MixinReloadableServerResources",
+    "common.MixinRangedAttackGoal",
+    "common.MixinRangedBowAttackGoal",
+    "common.MixinRangedCrossbowAttackGoal",
+    "common.MixinServerCommonPacketListenerImpl",
+    "common.MixinServerPlayerDimension",
+    "common.MixinServerEntity",
+    "common.MixinThrownTrident",
+    "common.MixinTridentAttack",
+    "common.MixinWitherBoss",
+    "common.MixinWitherBossAccessor",
+    "common.fabric.EntityConstructionMixin",
+    "common.fabric.EntityTickMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}
+
+

@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "id": "epicfight",
+  "version": "21.17.3-26.3-port-dev",
+  "name": "Epic Fight (personal Fabric port, incomplete)",
+  "description": "Personal-use work in progress; compilation and gameplay validation are not complete. Never publish.",
+  "authors": ["Yesman", "Gui", "Asan", "Wayfarer", "Fori", "Ellet"],
+  "license": "Code: GPL-3.0; Assets: All Rights Reserved",
+  "environment": "*",
+  "entrypoints": {
+    "main": ["yesman.epicfight.main.EpicFightMod"],
+    "client": ["yesman.epicfight.client.EpicFightFabricClient"]
+  },
+  "mixins": ["epicfight.mixins.json"],
+  "accessWidener": "epicfight.accesswidener",
+  "depends": {"fabricloader": ">=0.19.5", "minecraft": "26.3", "java": ">=25", "fabric-api": "0.162.0+26.3"}
+}

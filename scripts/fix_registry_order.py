@@ -1,0 +1,5 @@
+from pathlib import Path
+root=Path(__file__).resolve().parents[1]/'src/main/java/yesman/epicfight'
+p=root/'registry/EpicFightRegistries.java';s=p.read_text(encoding='utf-8').replace('        EpicFightBlockEntities.REGISTRY,\n        EpicFightBlocks.REGISTRY,', '        EpicFightBlocks.REGISTRY,\n        EpicFightBlockEntities.REGISTRY,').replace('        EpicFightSounds.REGISTRY,\n','').replace('        EpicFightAttributes.REGISTRY,', '        EpicFightAttributes.REGISTRY,\n        EpicFightSounds.REGISTRY,');p.write_text(s,encoding='utf-8')
+p=root/'main/EpicFightMod.java';s=p.read_text(encoding='utf-8');a=s.index('        AnimationManager.addNoWarningModId');b=s.index('\n        EpicFightCommandArgumentTypes.registerArgumentTypes()',a);block=s[a:b];s=s[:a]+s[b:];a=s.index('        EpicFightRegistries.DEFERRED_REGISTRIES.forEach');s=s[:a]+block+'\n'+s[a:];p.write_text(s,encoding='utf-8')
+p=root/'registry/entries/EpicFightBlockEntities.java';s=p.read_text(encoding='utf-8').replace('Util.fetchChoiceType(References.BLOCK_ENTITY, "fracture_block")', 'null /* 26.3 BlockEntityType has no DFU choice-type constructor parameter. */');p.write_text(s,encoding='utf-8')

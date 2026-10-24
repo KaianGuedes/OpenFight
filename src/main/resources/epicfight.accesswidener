@@ -1,0 +1,169 @@
+accessWidener v2 official
+accessible class net/minecraft/client/Camera
+accessible field net/minecraft/client/Camera eyeHeight F
+accessible field net/minecraft/client/Camera eyeHeightOld F
+accessible method net/minecraft/client/Camera getMaxZoom (F)F
+accessible method net/minecraft/client/Camera move (FFF)V
+accessible method net/minecraft/client/Camera setPosition (DDD)V
+accessible method net/minecraft/client/Camera setRotation (FF)V
+accessible class net/minecraft/client/DeltaTracker$Timer
+accessible field net/minecraft/client/DeltaTracker$Timer deltaTickResidual F
+accessible class net/minecraft/client/Minecraft
+accessible method net/minecraft/client/Minecraft startAttack ()Z
+accessible class net/minecraft/client/gui/components/AbstractSelectionList
+accessible method net/minecraft/client/gui/components/AbstractSelectionList getEntryAtPosition (DD)Lnet/minecraft/client/gui/components/AbstractSelectionList$Entry;
+extendable method net/minecraft/client/gui/components/AbstractSelectionList getEntryAtPosition (DD)Lnet/minecraft/client/gui/components/AbstractSelectionList$Entry;
+accessible class net/minecraft/client/gui/components/AbstractSliderButton
+accessible method net/minecraft/client/gui/components/AbstractSliderButton setValue (D)V
+accessible class net/minecraft/client/gui/components/EditBox
+accessible field net/minecraft/client/gui/components/EditBox responder Ljava/util/function/Consumer;
+accessible class net/minecraft/client/gui/screens/Screen
+accessible field net/minecraft/client/gui/screens/Screen INWORLD_MENU_BACKGROUND Lnet/minecraft/resources/Identifier;
+accessible field net/minecraft/client/gui/screens/Screen initialized Z
+accessible class net/minecraft/client/model/geom/ModelPart
+accessible field net/minecraft/client/model/geom/ModelPart cubes Ljava/util/List;
+accessible field net/minecraft/client/model/geom/ModelPart children Ljava/util/Map;
+accessible class net/minecraft/client/gui/components/ContainerObjectSelectionList$Entry
+accessible field net/minecraft/client/gui/components/ContainerObjectSelectionList$Entry focused Lnet/minecraft/client/gui/components/events/GuiEventListener;
+accessible class net/minecraft/client/model/geom/ModelPart$Cube
+accessible field net/minecraft/client/model/geom/ModelPart$Cube polygons [Lnet/minecraft/client/model/geom/ModelPart$Polygon;
+mutable field net/minecraft/client/model/geom/ModelPart$Cube polygons [Lnet/minecraft/client/model/geom/ModelPart$Polygon;
+accessible class net/minecraft/client/model/geom/ModelPart$Polygon
+accessible field net/minecraft/client/model/geom/ModelPart$Polygon normal Lorg/joml/Vector3fc;
+mutable field net/minecraft/client/model/geom/ModelPart$Polygon normal Lorg/joml/Vector3fc;
+accessible field net/minecraft/client/model/geom/ModelPart$Polygon vertices [Lnet/minecraft/client/model/geom/ModelPart$Vertex;
+mutable field net/minecraft/client/model/geom/ModelPart$Polygon vertices [Lnet/minecraft/client/model/geom/ModelPart$Vertex;
+accessible class net/minecraft/client/model/geom/ModelPart$Vertex
+accessible class net/minecraft/client/multiplayer/ClientLevel
+accessible field net/minecraft/client/multiplayer/ClientLevel connection Lnet/minecraft/client/multiplayer/ClientPacketListener;
+accessible class net/minecraft/client/multiplayer/MultiPlayerGameMode
+accessible method net/minecraft/client/multiplayer/MultiPlayerGameMode performUseItemOn (Lnet/minecraft/client/player/LocalPlayer;Lnet/minecraft/world/InteractionHand;Lnet/minecraft/world/phys/BlockHitResult;)Lnet/minecraft/world/InteractionResult;
+accessible class net/minecraft/client/player/LocalPlayer
+accessible field net/minecraft/client/player/LocalPlayer sprintTriggerTime I
+accessible class net/minecraft/client/renderer/entity/EntityRenderDispatcher
+accessible field net/minecraft/client/renderer/entity/EntityRenderDispatcher renderers Ljava/util/Map;
+accessible field net/minecraft/client/renderer/entity/EntityRenderDispatcher playerRenderers Ljava/util/Map;
+accessible class net/minecraft/client/renderer/entity/LivingEntityRenderer
+accessible field net/minecraft/client/renderer/entity/LivingEntityRenderer layers Ljava/util/List;
+accessible class net/minecraft/client/renderer/entity/layers/VillagerProfessionLayer
+accessible field net/minecraft/client/renderer/entity/layers/VillagerProfessionLayer typeHatCache Lit/unimi/dsi/fastutil/objects/Object2ObjectMap;
+accessible field net/minecraft/client/renderer/entity/layers/VillagerProfessionLayer professionHatCache Lit/unimi/dsi/fastutil/objects/Object2ObjectMap;
+accessible class net/minecraft/nbt/CompoundTag
+accessible field net/minecraft/nbt/CompoundTag tags Ljava/util/Map;
+accessible class net/minecraft/server/packs/repository/FolderRepositorySource
+accessible field net/minecraft/server/packs/repository/FolderRepositorySource DISCOVERED_PACK_SELECTION_CONFIG Lnet/minecraft/server/packs/PackSelectionConfig;
+accessible class net/minecraft/server/packs/repository/FolderRepositorySource$FolderPackDetector
+accessible method net/minecraft/server/packs/repository/FolderRepositorySource$FolderPackDetector <init> (Lnet/minecraft/world/level/validation/DirectoryValidator;)V
+accessible class net/minecraft/world/damagesource/CombatTracker
+accessible field net/minecraft/world/damagesource/CombatTracker mob Lnet/minecraft/world/entity/LivingEntity;
+accessible class net/minecraft/world/entity/AreaEffectCloud
+accessible field net/minecraft/world/entity/AreaEffectCloud victims Ljava/util/Map;
+accessible class net/minecraft/world/entity/ai/Brain
+accessible field net/minecraft/world/entity/ai/Brain availableBehaviorsByPriority Ljava/util/Map;
+accessible class net/minecraft/world/entity/ai/attributes/AttributeMap
+accessible field net/minecraft/world/entity/ai/attributes/AttributeMap supplier Lnet/minecraft/world/entity/ai/attributes/AttributeSupplier;
+mutable field net/minecraft/world/entity/ai/attributes/AttributeMap supplier Lnet/minecraft/world/entity/ai/attributes/AttributeSupplier;
+accessible class net/minecraft/world/entity/ai/attributes/AttributeSupplier
+accessible field net/minecraft/world/entity/ai/attributes/AttributeSupplier instances Ljava/util/Map;
+accessible class net/minecraft/world/entity/ai/goal/target/NearestAttackableTargetGoal
+accessible field net/minecraft/world/entity/ai/goal/target/NearestAttackableTargetGoal targetType Ljava/lang/Class;
+accessible field net/minecraft/world/entity/ai/goal/target/NearestAttackableTargetGoal targetConditions Lnet/minecraft/world/entity/ai/targeting/TargetingConditions;
+accessible class net/minecraft/world/entity/boss/enderdragon/EnderDragon
+accessible field net/minecraft/world/entity/boss/enderdragon/EnderDragon growlTime I
+accessible field net/minecraft/world/entity/boss/enderdragon/EnderDragon phaseManager Lnet/minecraft/world/entity/boss/enderdragon/phases/EnderDragonPhaseManager;
+mutable field net/minecraft/world/entity/boss/enderdragon/EnderDragon phaseManager Lnet/minecraft/world/entity/boss/enderdragon/phases/EnderDragonPhaseManager;
+accessible class net/minecraft/world/entity/boss/enderdragon/phases/EnderDragonPhase
+accessible method net/minecraft/world/entity/boss/enderdragon/phases/EnderDragonPhase create (Ljava/lang/Class;Ljava/lang/String;)Lnet/minecraft/world/entity/boss/enderdragon/phases/EnderDragonPhase;
+accessible class net/minecraft/world/entity/boss/enderdragon/phases/EnderDragonPhaseManager
+accessible field net/minecraft/world/entity/boss/enderdragon/phases/EnderDragonPhaseManager dragon Lnet/minecraft/world/entity/boss/enderdragon/EnderDragon;
+accessible class net/minecraft/world/entity/boss/wither/WitherBoss
+accessible field net/minecraft/world/entity/boss/wither/WitherBoss TARGETING_CONDITIONS Lnet/minecraft/world/entity/ai/targeting/TargetingConditions;
+accessible class net/minecraft/world/entity/Entity
+accessible field net/minecraft/world/entity/Entity dimensions Lnet/minecraft/world/entity/EntityDimensions;
+accessible method net/minecraft/world/entity/Entity getInputVector (Lnet/minecraft/world/phys/Vec3;FF)Lnet/minecraft/world/phys/Vec3;
+accessible class net/minecraft/world/entity/LivingEntity
+accessible field net/minecraft/world/entity/LivingEntity attackStrengthTicker I
+accessible field net/minecraft/world/entity/LivingEntity lastHurt F
+accessible field net/minecraft/world/entity/LivingEntity noJumpDelay I
+accessible class net/minecraft/world/entity/projectile/arrow/AbstractArrow
+accessible method net/minecraft/world/entity/projectile/arrow/AbstractArrow setPierceLevel (B)V
+accessible class net/minecraft/world/entity/projectile/arrow/ThrownTrident
+accessible field net/minecraft/world/entity/projectile/arrow/ThrownTrident dealtDamage Z
+accessible class net/minecraft/world/item/ItemStack
+accessible method net/minecraft/world/item/ItemStack <init> (Ljava/lang/Void;)V
+accessible field net/minecraft/world/entity/Entity invulnerableTime I
+accessible class net/minecraft/world/level/Level
+accessible field net/minecraft/world/level/Level isClientSide Z
+accessible class net/minecraft/world/entity/Mob
+accessible field net/minecraft/world/entity/Mob targetSelector Lnet/minecraft/world/entity/ai/goal/GoalSelector;
+accessible class net/minecraft/server/level/ServerPlayer
+accessible field net/minecraft/server/level/ServerPlayer server Lnet/minecraft/server/MinecraftServer;
+accessible class net/minecraft/world/entity/player/Inventory
+accessible field net/minecraft/world/entity/player/Inventory selected I
+accessible field net/minecraft/client/gui/screens/Screen renderables Ljava/util/List;
+accessible class net/minecraft/client/model/geom/PartPose
+accessible field net/minecraft/client/model/geom/PartPose x F
+accessible field net/minecraft/client/model/geom/PartPose y F
+accessible field net/minecraft/client/model/geom/PartPose z F
+accessible field net/minecraft/client/model/geom/PartPose zRot F
+accessible field net/minecraft/client/model/geom/PartPose yRot F
+accessible field net/minecraft/client/model/geom/PartPose xRot F
+accessible field net/minecraft/world/entity/Mob goalSelector Lnet/minecraft/world/entity/ai/goal/GoalSelector;
+accessible class net/minecraft/world/level/dimension/end/EnderDragonFight
+accessible field net/minecraft/world/level/dimension/end/EnderDragonFight dragonEvent Lnet/minecraft/server/level/ServerBossEvent;
+accessible class net/minecraft/core/IdMapper
+accessible field net/minecraft/core/IdMapper tToId Lit/unimi/dsi/fastutil/objects/Reference2IntMap;
+accessible field net/minecraft/core/IdMapper idToT Ljava/util/List;
+accessible field net/minecraft/core/IdMapper nextId I
+accessible field net/minecraft/world/level/Level random Lnet/minecraft/util/RandomSource;
+accessible class net/minecraft/client/gui/components/AbstractButton
+accessible field net/minecraft/client/gui/components/AbstractButton SPRITES Lnet/minecraft/client/gui/components/WidgetSprites;
+accessible class net/minecraft/client/renderer/rendertype/RenderType
+accessible field net/minecraft/client/renderer/rendertype/RenderType name Ljava/lang/String;
+accessible class net/minecraft/client/gui/components/AbstractScrollArea
+accessible field net/minecraft/client/gui/components/AbstractScrollArea scrolling Z
+accessible method net/minecraft/world/entity/monster/Enderman teleport ()Z
+accessible field net/minecraft/world/entity/monster/Enderman DATA_CREEPY Lnet/minecraft/network/syncher/EntityDataAccessor;
+accessible method net/minecraft/world/damagesource/DamageSource <init> (Lnet/minecraft/core/Holder;Lnet/minecraft/world/entity/Entity;Lnet/minecraft/world/entity/Entity;Lnet/minecraft/world/phys/Vec3;)V
+accessible field net/minecraft/client/renderer/rendertype/RenderType state Lnet/minecraft/client/renderer/rendertype/RenderSetup;
+accessible field net/minecraft/client/renderer/rendertype/RenderType name Ljava/lang/String;
+accessible method net/minecraft/client/renderer/rendertype/RenderType create (Ljava/lang/String;Lnet/minecraft/client/renderer/rendertype/RenderSetup;)Lnet/minecraft/client/renderer/rendertype/RenderType;
+accessible class net/minecraft/client/renderer/rendertype/RenderSetup
+accessible class net/minecraft/client/renderer/rendertype/RenderSetup$TextureBinding
+accessible field net/minecraft/client/renderer/rendertype/RenderSetup pipeline Lcom/mojang/renderpearl/api/pipeline/RenderPipeline;
+accessible field net/minecraft/client/renderer/rendertype/RenderSetup oitPipelineSet Lnet/minecraft/client/renderer/oit/OitPipelineSet;
+accessible field net/minecraft/client/renderer/rendertype/RenderSetup textures Ljava/util/Map;
+accessible field net/minecraft/client/renderer/rendertype/RenderSetup textureTransform Lnet/minecraft/client/renderer/rendertype/TextureTransform;
+accessible field net/minecraft/client/renderer/rendertype/RenderSetup outlineProperty Lnet/minecraft/client/renderer/rendertype/RenderSetup$OutlineProperty;
+accessible field net/minecraft/client/renderer/rendertype/RenderSetup outlineTextureName Ljava/lang/String;
+accessible field net/minecraft/client/renderer/rendertype/RenderSetup useLightmap Z
+accessible field net/minecraft/client/renderer/rendertype/RenderSetup useOverlay Z
+accessible field net/minecraft/client/renderer/rendertype/RenderSetup affectsCrumbling Z
+accessible field net/minecraft/client/renderer/rendertype/RenderSetup sortOnUpload Z
+accessible field net/minecraft/client/renderer/rendertype/RenderSetup layeringTransform Lnet/minecraft/client/renderer/rendertype/LayeringTransform;
+accessible field net/minecraft/client/renderer/rendertype/RenderSetup forceSolidModelPhase Z
+accessible method net/minecraft/client/renderer/rendertype/RenderSetup <init> (Lcom/mojang/renderpearl/api/pipeline/RenderPipeline;Lnet/minecraft/client/renderer/oit/OitPipelineSet;Ljava/util/Map;ZZLnet/minecraft/client/renderer/rendertype/LayeringTransform;Lnet/minecraft/client/renderer/rendertype/TextureTransform;Lnet/minecraft/client/renderer/rendertype/RenderSetup$OutlineProperty;Ljava/lang/String;ZZZ)V
+accessible method net/minecraft/client/renderer/rendertype/RenderSetup$TextureBinding <init> (Lnet/minecraft/resources/Identifier;Ljava/util/function/Supplier;)V
+accessible field net/minecraft/client/renderer/rendertype/RenderSetup$TextureBinding location Lnet/minecraft/resources/Identifier;
+accessible field net/minecraft/client/renderer/rendertype/RenderSetup$TextureBinding sampler Ljava/util/function/Supplier;
+accessible field net/minecraft/world/entity/boss/wither/WitherBoss TARGETING_CONDITIONS Lnet/minecraft/world/entity/ai/targeting/TargetingConditions;
+accessible field net/minecraft/client/gui/GuiGraphicsExtractor guiRenderState Lnet/minecraft/client/renderer/state/gui/GuiRenderState;
+accessible field net/minecraft/client/gui/GuiGraphicsExtractor scissorStack Lnet/minecraft/client/gui/GuiGraphicsExtractor$ScissorStack;
+accessible field net/minecraft/client/KeyMapping key Lcom/mojang/blaze3d/platform/InputConstants$Key;
+accessible field net/minecraft/client/player/ClientInput moveVector Lnet/minecraft/world/phys/Vec2;
+accessible field net/minecraft/client/gui/screens/inventory/AbstractContainerScreen hoveredSlot Lnet/minecraft/world/inventory/Slot;
+accessible method net/minecraft/client/particle/SingleQuadParticle setAlpha (F)V
+
+accessible field net/minecraft/client/renderer/item/ItemStackRenderState activeLayerCount I
+
+accessible field net/minecraft/client/renderer/item/ItemStackRenderState layers [Lnet/minecraft/client/renderer/item/ItemStackRenderState$LayerRenderState;
+
+accessible field net/minecraft/client/renderer/item/ItemStackRenderState$LayerRenderState quads Lnet/minecraft/client/resources/model/geometry/ItemQuads;
+
+accessible field net/minecraft/client/renderer/item/ItemStackRenderState$LayerRenderState tintLayers Lit/unimi/dsi/fastutil/ints/IntList;
+
+accessible method net/minecraft/client/renderer/item/ItemStackRenderState$LayerRenderState applyTransform (Lcom/mojang/blaze3d/vertex/PoseStack$Pose;)V
+
+accessible field net/minecraft/client/renderer/item/properties/numeric/RangeSelectItemModelProperties ID_MAPPER Lnet/minecraft/util/ExtraCodecs$LateBoundIdMapper;
+
+accessible method net/minecraft/world/entity/projectile/arrow/AbstractArrow isInGround ()Z
