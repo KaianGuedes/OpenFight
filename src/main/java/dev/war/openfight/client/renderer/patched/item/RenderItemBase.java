@@ -62,7 +62,7 @@ public class RenderItemBase {
 	
 	public static void initItemRenderers(Minecraft minecraft) {
 		if (itemRenderer != null || itemInHandRenderer != null) {
-			throw new IllegalStateException("Already initialized item renderers");
+			return;
 		}
 		
 		itemRenderer = new ItemRenderer();
