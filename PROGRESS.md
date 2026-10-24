@@ -23,3 +23,10 @@ Status: DONE
 - `gradlew clean build`: PASS after history cleanup, including `verifyNoArrAssets`, 47 mixin target checks, and the port component verification tasks.
 - `scripts/smoke_client.py`: PASS after history cleanup; title/create-world flow, joined player, combo data, 600 combat ticks, 60 attacks, six weapon switches, three mode toggles, and runtime mixin audit.
 - The build-generated models match the pre-deletion backup byte for byte (104/104); `git log --all -- overlay/assets/epicfight/models/item/fabric_port` returns no commits.
+
+## Iris / Complementary Unbound shard fix
+- Root cause: meshes were drawn through custom TRIANGLES clones of vanilla entity pipelines/render types (`EpicFightRenderTypes.getTriangulated`). Iris only maps vanilla pipelines to its entity programs and vertex layout, so the clones were unknown to it and the shader pack received mismatched vertex data, producing exploded triangle shards.
+- Fix: Epic Fight triangle-list meshes (`ClassicMesh`, `SkinnedMesh`, `SkinnedMesh` parts, cloth parts) now repeat the last vertex of each triangle, producing degenerate QUADS drawn through the unmodified vanilla render types. `getTriangulated` is the identity, overlay/particle/afterimage pipelines are QUADS, the compute-shader draw path (triangle output) is bypassed. Only the GUI triangle pipelines (not mesh/Iris related) remain TRIANGLES.
+- Build: Iris 1.11.7 (compileOnly/runtimeOnly) and Sodium via the Modrinth maven for dev runs.
+- Verification: `gradlew build` PASS; `scripts/smoke_client.py` PASS (with Iris + Complementary Unbound loaded); screenshots with `-PportSmoke -PportScreens` land in `run/screenshots/smoke_*.png` (third person and first person show no shards).
+- Open: compute-shader skinning is disabled for now (needs a quad-compatible output path); third-person-front smoke capture can clip into terrain.
