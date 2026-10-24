@@ -4,7 +4,7 @@
 Public GitHub repo `KaianGuedes/OpenFight`: a Fabric (Minecraft 26.3) port of Epic Fight, faithful to the original, compatible with Epic Fight datapacks/resource packs. Code GPL-3.0-or-later. **No Epic Fight ARR asset is ever committed.** No jar is published for now; users build locally.
 
 ## Source
-- Code: the working personal port at `C:\Users\eugue\Downloads\ef-port\proj` (git history NOT carried over; fresh history).
+- Code: the author's local Fabric 26.3 port of Epic Fight (git history NOT carried over; fresh history).
 - Assets: git submodule `upstream/` → https://github.com/Yesssssman/epicfightmod pinned at `a78aa24b72e90a9d09f5fd61925e4369d117abaf`.
 
 ## Decisions
