@@ -93,6 +93,24 @@ tasks.processResources {
             exclude 'epicfight/nativelib/**', 'epicskins/**', 'minecraft/animated_layers/player/waveycapes.json'
         }
 
+        // Fabric cannot load NeoForge's separate_transforms item model loader. Split
+        // each upstream model into the four vanilla perspective models at build time.
+        def itemModels = new File(upstreamAssets, 'epicfight/models/item')
+        def generatedItemModels = new File(destination, 'epicfight/models/item/fabric_port')
+        generatedItemModels.mkdirs()
+        itemModels.listFiles()?.findAll { it.isFile() && it.name.endsWith('.json') }?.each { sourceModel ->
+            def model = new groovy.json.JsonSlurper().parse(sourceModel)
+            if (model.loader != 'neoforge:separate_transforms') return
+            def stem = sourceModel.name.substring(0, sourceModel.name.length() - '.json'.length())
+            def variants = ['base': model.base] + (model.perspectives ?: [:])
+            variants.each { perspective, contents ->
+                def output = new File(generatedItemModels, "${stem}_${perspective}.json")
+                def json = groovy.json.JsonOutput.prettyPrint(groovy.json.JsonOutput.toJson(contents))
+                // Match the two-space formatting used by the previous generated files.
+                output.text = json.replaceAll('(?m)^( +)') { match, indent -> ' ' * (indent.length() / 2) }.replace('\n', '\r\n') + '\r\n'
+            }
+        }
+
         def textures = new File(destination, 'epicfight/textures')
         [
             'models/armor/stray_cloth_layer_1.png': 'entity/equipment/humanoid/stray_cloth.png',
@@ -131,6 +149,11 @@ tasks.register('verifyNoArrAssets') {
         def sourceAssets = file('src/main/resources/assets')
         if (sourceAssets.exists() && fileTree(sourceAssets).files) {
             throw new GradleException('src/main/resources/assets must remain empty; use overlay/assets for port additions.')
+        }
+
+        def overlayModels = file('overlay/assets/epicfight/models')
+        if (overlayModels.exists() && fileTree(overlayModels).files) {
+            throw new GradleException('Upstream-derived models must be generated into build resources; overlay/assets/epicfight/models must remain empty.')
         }
 
         def git = new ProcessBuilder('git', 'ls-files', '-z').directory(projectDir).start()
