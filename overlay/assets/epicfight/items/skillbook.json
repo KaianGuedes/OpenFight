@@ -1,0 +1,82 @@
+{
+  "model": {
+    "type": "minecraft:range_dispatch",
+    "property": "epicfight:skill",
+    "entries": [
+      {
+        "threshold": 0,
+        "model": {
+          "type": "minecraft:model",
+          "model": "epicfight:item/skillbook"
+        }
+      },
+      {
+        "threshold": 1,
+        "model": {
+          "type": "minecraft:model",
+          "model": "epicfight:item/skillbook_dodge"
+        }
+      },
+      {
+        "threshold": 2,
+        "model": {
+          "type": "minecraft:model",
+          "model": "epicfight:item/skillbook_passive"
+        }
+      },
+      {
+        "threshold": 3,
+        "model": {
+          "type": "minecraft:model",
+          "model": "epicfight:item/skillbook"
+        }
+      },
+      {
+        "threshold": 4,
+        "model": {
+          "type": "minecraft:model",
+          "model": "epicfight:item/skillbook"
+        }
+      },
+      {
+        "threshold": 5,
+        "model": {
+          "type": "minecraft:model",
+          "model": "epicfight:item/skillbook_guard"
+        }
+      },
+      {
+        "threshold": 6,
+        "model": {
+          "type": "minecraft:model",
+          "model": "epicfight:item/skillbook"
+        }
+      },
+      {
+        "threshold": 7,
+        "model": {
+          "type": "minecraft:model",
+          "model": "epicfight:item/skillbook_mover"
+        }
+      },
+      {
+        "threshold": 8,
+        "model": {
+          "type": "minecraft:model",
+          "model": "epicfight:item/skillbook_identity"
+        }
+      },
+      {
+        "threshold": 9,
+        "model": {
+          "type": "minecraft:model",
+          "model": "epicfight:item/skillbook"
+        }
+      }
+    ],
+    "fallback": {
+      "type": "minecraft:model",
+      "model": "epicfight:item/skillbook"
+    }
+  }
+}

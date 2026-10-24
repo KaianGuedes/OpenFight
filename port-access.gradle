@@ -1,0 +1,145 @@
+import groovy.json.JsonSlurper
+import org.objectweb.asm.ClassReader
+import org.objectweb.asm.Opcodes
+import org.objectweb.asm.tree.ClassNode
+import java.util.zip.ZipFile
+
+buildscript {
+    repositories { mavenCentral() }
+    dependencies { classpath 'org.ow2.asm:asm-tree:9.9.1' }
+}
+
+tasks.register('generatePortAccessWidener') {
+    doLast {
+        def jars=sourceSets.main.compileClasspath.files.findAll { it.name.endsWith('.jar') }.collect { new ZipFile(it) }
+        def nodes=[:]
+        jars.each { jar -> jar.entries().each { entry ->
+            if (entry.name.endsWith('.class') && (entry.name.startsWith('net/minecraft/') || entry.name.startsWith('com/mojang/'))) {
+                def node=new ClassNode()
+                new ClassReader(jar.getInputStream(entry).bytes).accept(node,ClassReader.SKIP_CODE | ClassReader.SKIP_DEBUG)
+                nodes[node.name]=node
+            }
+        } }
+        def resolve={ String name ->
+            String path=name.replace('.','/')
+            if (nodes[path]) return path
+            String tail=path.tokenize('/').last()
+            def matches=nodes.keySet().findAll { it.tokenize('/').last()==tail }
+            matches.size()==1 ? matches.first() : null
+        }
+        def out=new LinkedHashSet<String>()
+        def missing=[]
+        def accessibleClass={ String owner -> out << "accessible class ${owner}" }
+        def addField={ String owner, def field, boolean mutable ->
+            accessibleClass(owner)
+            out << "accessible field ${owner} ${field.name} ${field.desc}"
+            if (mutable && (field.access & Opcodes.ACC_FINAL)!=0) out << "mutable field ${owner} ${field.name} ${field.desc}"
+        }
+        def addMethod={ String owner, def method, boolean extendable ->
+            accessibleClass(owner)
+            out << "accessible method ${owner} ${method.name} ${method.desc}"
+            if (extendable && (method.access & Opcodes.ACC_STATIC)==0 && method.name!='<init>') out << "extendable method ${owner} ${method.name} ${method.desc}"
+        }
+        file('upstream/src/main/resources/META-INF/accesstransformer.cfg').eachLine { raw ->
+            def tokens=raw.trim().split(/\s+/)
+            if (tokens.size()<2 || tokens[0].startsWith('#')) return
+            String owner=resolve(tokens[1])
+            if (owner==null) { missing << "Missing class: ${raw}"; return }
+            def node=nodes[owner]
+            if (tokens.size()==2) { accessibleClass(owner); if (tokens[0].endsWith('-f') && (node.access & Opcodes.ACC_FINAL)!=0) out << "extendable class ${owner}"; return }
+            String member=tokens[2]
+            if (member.contains('(')) {
+                int start=member.indexOf('(')
+                String name=member.substring(0,start)
+                String descriptor=member.substring(start).replace('net/minecraft/resources/ResourceLocation','net/minecraft/resources/Identifier')
+                def method=node.methods.find { it.name==name && it.desc==descriptor }
+                if (method==null) missing << "Missing method: ${raw}"
+                else addMethod(owner,method,tokens[0].endsWith('-f'))
+            } else {
+                def field=node.fields.find { it.name==member }
+                if (field==null) missing << "Missing field: ${raw}"
+                else addField(owner,field,tokens[0].endsWith('-f'))
+            }
+        }
+        def candidates=file('access-candidates.json')
+        if (candidates.exists()) new JsonSlurper().parse(candidates).each { candidate ->
+            String owner=resolve(candidate.owner)
+            if (owner==null) { missing << "Missing diagnostic owner: ${candidate}"; return }
+            def node=nodes[owner]
+            def field=node.fields.find { it.name==candidate.member }
+            if (field!=null) addField(owner,field,false)
+            else {
+                def methods=node.methods.findAll { it.name==candidate.member }
+                if (methods.empty) missing << "Missing diagnostic member: ${candidate}"
+                methods.each { addMethod(owner,it,false) }
+            }
+        }
+        jars.each { it.close() }
+        file('src/main/resources/epicfight.accesswidener').text='accessWidener v2 official\n'+out.join('\n')+'\n'
+        def report=file('build/reports/access-migration.txt')
+        report.parentFile.mkdirs()
+        report.text="Verified entries: ${out.size()}\nUnported original access entries: ${missing.size()}\n\n"+missing.join('\n')+'\n'
+        println "Generated ${out.size()} verified access entries; ${missing.size()} obsolete targets require manual porting."
+    }
+}
+
+// Source target preflight can run before compilation. Full handler bytecode/runtime auditing still follows a successful build.
+tasks.register('auditMixinTargets') {
+    doLast {
+        def inventory=new JsonSlurper().parse(file('mixin-targets.json'))
+        def jars=sourceSets.main.compileClasspath.files.findAll { it.name.endsWith('.jar') }.collect { new ZipFile(it) }
+        def cache=[:]
+        def readClass={ String name ->
+            if (!cache.containsKey(name)) {
+                byte[] bytes=null
+                for (def jar:jars) {
+                    def entry=jar.getEntry(name+'.class')
+                    if (entry!=null) { bytes=jar.getInputStream(entry).bytes; break }
+                }
+                if (bytes==null) cache[name]=null
+                else { def node=new ClassNode(); new ClassReader(bytes).accept(node,0); cache[name]=node }
+            }
+            cache[name]
+        }
+        def hierarchy
+        hierarchy={ String name ->
+            def node=readClass(name)
+            node==null ? [] : [node]+(node.superName==null ? [] : hierarchy(node.superName))
+        }
+        def failures=[]
+        def report=['Source target preflight only. Injection handler signatures, shadows and runtime transformations require the mod to compile.']
+        try {
+            inventory.each { mixin ->
+                int before=failures.size()
+                if (mixin.targets.empty) failures << "${mixin.name}: missing/unresolved target in source"
+                mixin.targets.each { targetName ->
+                    def target=readClass(targetName)
+                    if (target==null) { failures << "${mixin.name}: missing target ${targetName}"; return }
+                    def methods=target.methods
+                    mixin.injections.each { injection ->
+                        if (injection.selectors.empty) { failures << "${mixin.name}: no parsed method selector for ${injection.kind}"; return }
+                        injection.selectors.each { selector ->
+                            int split=selector.indexOf('(')
+                            String name=split<0 ? selector : selector.substring(0,split)
+                            String desc=split<0 ? null : selector.substring(split)
+                            def matches=methods.findAll { it.name==name && (desc==null || it.desc==desc) }
+                            if (matches.empty) { failures << "${mixin.name}: missing method ${targetName}.${selector}"; return }
+                            injection.sites.each { site ->
+                                boolean method=site.contains('(')
+                                if (method && !matches.any { m -> m.instructions.any { insn ->
+                                    insn instanceof org.objectweb.asm.tree.MethodInsnNode && "L${insn.owner};${insn.name}${insn.desc}"==site
+                                } }) failures << "${mixin.name}: missing invocation ${site} within ${selector}"
+                            }
+                        }
+                    }
+                }
+                report << "${mixin.name}: ${failures.size()-before} target failures"
+            }
+        } finally { jars.each { it.close() } }
+        def dest=file('build/reports/mixin-target-audit.txt')
+        dest.parentFile.mkdirs()
+        dest.text="Configured mixins: ${inventory.size()}\nTarget failures: ${failures.size()}\n\n"+report.join('\n')+'\n\n'+failures.join('\n')+'\n'
+        if (!failures.empty) throw new GradleException("${failures.size()} mixin target failures; see build/reports/mixin-target-audit.txt")
+        println "All ${inventory.size()} source mixin targets pass preflight; compiled handler/runtime auditing still required."
+    }
+}

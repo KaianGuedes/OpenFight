@@ -1,9 +1,9 @@
 plugins { id 'net.fabricmc.fabric-loom' version '1.18-SNAPSHOT' }
 repositories { mavenCentral() }
-group = 'yesman.epicfight'
+group = 'dev.war'
 version = '21.17.3-26.3-port-dev'
-base { archivesName = 'epicfight-fabric' }
-tasks.named('jar') { from 'LICENSE', 'LICENSE-ASSETS' }
+base { archivesName = 'openfight' }
+tasks.named('jar') { from 'LICENSE' }
 loom { accessWidenerPath = file('src/main/resources/epicfight.accesswidener') }
 dependencies {
     minecraft 'com.mojang:minecraft:26.3'
@@ -19,18 +19,18 @@ tasks.withType(JavaCompile).configureEach {
 sourceSets.main.resources.srcDir('src/generated/resources')
 // TASK.md explicitly omits optional integrations and datagen. Combat, skills and rendering remain in main.
 sourceSets.main.java {
-    exclude 'yesman/epicfight/compat/*/**'
-    exclude 'yesman/epicfight/platform/neoforge/**'
-    exclude 'yesman/epicfight/data/DataEvents.java', 'yesman/epicfight/data/recipes/**', 'yesman/epicfight/data/tags/**'
+    exclude 'dev/war/openfight/compat/*/**'
+    exclude 'dev/war/openfight/platform/neoforge/**'
+    exclude 'dev/war/openfight/data/DataEvents.java', 'dev/war/openfight/data/recipes/**', 'dev/war/openfight/data/tags/**'
 }
 // Explicit progress check; the full main source tree remains compiled by build.
 tasks.register('verifyPortAdapters', JavaCompile) {
     source = fileTree('src/main/java') {
-        include 'yesman/epicfight/platform/fabric/**/*.java'
-        exclude 'yesman/epicfight/platform/fabric/item/ItemMaterial.java'
-        exclude 'yesman/epicfight/platform/fabric/event/FabricGameplayEvents.java'
-        include 'yesman/epicfight/platform/ModPlatform.java'
-        include 'yesman/epicfight/platform/client/*.java'
+        include 'dev/war/openfight/platform/fabric/**/*.java'
+        exclude 'dev/war/openfight/platform/fabric/item/ItemMaterial.java'
+        exclude 'dev/war/openfight/platform/fabric/event/FabricGameplayEvents.java'
+        include 'dev/war/openfight/platform/ModPlatform.java'
+        include 'dev/war/openfight/platform/client/*.java'
     }
     classpath = sourceSets.main.compileClasspath
     options.sourcepath = files()
@@ -44,9 +44,9 @@ tasks.register('compilePortVerification', JavaCompile) {
 }
 tasks.register('verifyPortMath', JavaCompile) {
     source = fileTree('src/main/java') {
-        include 'yesman/epicfight/api/utils/math/*.java'
-        include 'yesman/epicfight/api/animation/Joint.java', 'yesman/epicfight/api/animation/JointTransform.java'
-        include 'yesman/epicfight/EpicFight.java', 'yesman/epicfight/platform/ModPlatform.java', 'yesman/epicfight/platform/ModPlatformProvider.java'
+        include 'dev/war/openfight/api/utils/math/*.java'
+        include 'dev/war/openfight/api/animation/Joint.java', 'dev/war/openfight/api/animation/JointTransform.java'
+        include 'dev/war/openfight/EpicFight.java', 'dev/war/openfight/platform/ModPlatform.java', 'dev/war/openfight/platform/ModPlatformProvider.java'
     }
     classpath = sourceSets.main.compileClasspath
     options.sourcepath = files()
@@ -54,23 +54,23 @@ tasks.register('verifyPortMath', JavaCompile) {
 }
 tasks.register('verifyPortTransforms', JavaExec) {
     dependsOn 'compilePortVerification'
-    mainClass = 'yesman.epicfight.port.TransformVerification'
+    mainClass = 'dev.war.openfight.port.TransformVerification'
     classpath = sourceSets.main.compileClasspath + files(layout.buildDirectory.dir('classes/portMath'), layout.buildDirectory.dir('classes/portVerification'))
 }
 tasks.register('verifyPortPackMetadata', JavaExec) {
     dependsOn 'compilePortVerification', 'processResources'
-    mainClass = 'yesman.epicfight.port.PackMetadataVerification'
+    mainClass = 'dev.war.openfight.port.PackMetadataVerification'
     classpath = sourceSets.main.compileClasspath + files(layout.buildDirectory.dir('classes/portVerification'))
     args layout.buildDirectory.dir('resources/main').get().asFile.absolutePath
 }
 tasks.register('verifyPortEntityNbt', JavaExec) {
     dependsOn 'compilePortVerification'
-    mainClass = 'yesman.epicfight.port.EntityNbtVerification'
+    mainClass = 'dev.war.openfight.port.EntityNbtVerification'
     classpath = sourceSets.main.compileClasspath + files(layout.buildDirectory.dir('classes/portAdapters'), layout.buildDirectory.dir('classes/portVerification'))
 }
 tasks.register('verifyPortConfig', JavaExec) {
     dependsOn 'compilePortVerification'
-    mainClass = 'yesman.epicfight.port.ConfigVerification'
+    mainClass = 'dev.war.openfight.port.ConfigVerification'
     classpath = sourceSets.main.compileClasspath + files(layout.buildDirectory.dir('classes/portAdapters'), layout.buildDirectory.dir('classes/portVerification'))
     args layout.buildDirectory.dir('port-verification/config').get().asFile.absolutePath
 }
@@ -81,11 +81,88 @@ tasks.processResources {
     exclude 'data/**/recipes/**', 'data/**/loot_tables/**', 'data/**/advancements/**'
     exclude 'data/**/tags/items/**', 'data/**/tags/blocks/**', 'data/**/tags/entity_types/**', 'data/**/tags/damage_types/**'
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+    doLast {
+        def destination = destinationDir.toPath().resolve('assets').toFile()
+        def upstreamAssets = file('upstream/src/main/resources/assets')
+        if (!upstreamAssets.isDirectory()) {
+            throw new GradleException("Missing upstream assets submodule at ${upstreamAssets}")
+        }
+        project.copy {
+            from upstreamAssets
+            into destination
+            exclude 'epicfight/nativelib/**', 'epicskins/**', 'minecraft/animated_layers/player/waveycapes.json'
+        }
+
+        def textures = new File(destination, 'epicfight/textures')
+        [
+            'models/armor/stray_cloth_layer_1.png': 'entity/equipment/humanoid/stray_cloth.png',
+            'models/armor/stray_cloth_layer_2.png': 'entity/equipment/humanoid_leggings/stray_cloth.png'
+        ].each { source, target ->
+            def sourceFile = new File(textures, source)
+            def targetFile = new File(textures, target)
+            if (!sourceFile.isFile()) throw new GradleException("Missing source texture ${sourceFile}")
+            targetFile.parentFile.mkdirs()
+            java.nio.file.Files.copy(sourceFile.toPath(), targetFile.toPath(), java.nio.file.StandardCopyOption.REPLACE_EXISTING)
+        }
+
+        def overlayAssets = file('overlay/assets')
+        if (overlayAssets.isDirectory()) {
+            project.copy {
+                from overlayAssets
+                into destination
+                exclude '**/lang/*.json'
+            }
+            fileTree(overlayAssets).matching { include '**/lang/*.json' }.files.each { overlayFile ->
+                def relative = overlayAssets.toPath().relativize(overlayFile.toPath()).toString()
+                def mergedFile = new File(destination, relative)
+                def merged = mergedFile.isFile() ? new groovy.json.JsonSlurper().parse(mergedFile) : [:]
+                merged.putAll(new groovy.json.JsonSlurper().parse(overlayFile))
+                mergedFile.parentFile.mkdirs()
+                mergedFile.text = groovy.json.JsonOutput.prettyPrint(groovy.json.JsonOutput.toJson(merged)) + '\n'
+            }
+        }
+    }
 }
 apply from: 'port-access.gradle'
-tasks.named('check') { dependsOn 'verifyPortConfig', 'verifyPortTransforms', 'verifyPortPackMetadata', 'verifyPortEntityNbt', 'auditMixinTargets' }
+tasks.register('verifyNoArrAssets') {
+    group = 'verification'
+    description = 'Rejects checked-in assets and files duplicated from the upstream ARR asset tree.'
+    doLast {
+        def sourceAssets = file('src/main/resources/assets')
+        if (sourceAssets.exists() && fileTree(sourceAssets).files) {
+            throw new GradleException('src/main/resources/assets must remain empty; use overlay/assets for port additions.')
+        }
+
+        def git = new ProcessBuilder('git', 'ls-files', '-z').directory(projectDir).start()
+        def tracked = git.inputStream.bytes
+        def gitError = git.errorStream.text
+        if (git.waitFor() != 0) {
+            throw new GradleException("git ls-files failed: ${gitError}")
+        }
+        def upstreamAssets = file('upstream/src/main/resources/assets')
+        def upstreamHashes = [] as Set
+        if (upstreamAssets.isDirectory()) {
+            fileTree(upstreamAssets).files.each { upstreamFile ->
+                upstreamHashes.add(java.security.MessageDigest.getInstance('SHA-256').digest(upstreamFile.bytes).encodeHex().toString())
+            }
+        }
+        new String(tracked, 'UTF-8').split('\\u0000').findAll { it }.each { path ->
+            def trackedFile = file(path)
+            if (!trackedFile.isFile()) return
+            if (path ==~ /(?i).*\\.(dll|so|dylib)$/) {
+                throw new GradleException("Native library must not be tracked: ${path}")
+            }
+            def hash = java.security.MessageDigest.getInstance('SHA-256').digest(trackedFile.bytes).encodeHex().toString()
+            if (upstreamHashes.contains(hash)) {
+                throw new GradleException("Tracked file duplicates an upstream ARR asset: ${path}")
+            }
+        }
+    }
+}
+
+tasks.named('check') { dependsOn 'verifyPortConfig', 'verifyPortTransforms', 'verifyPortPackMetadata', 'verifyPortEntityNbt', 'auditMixinTargets', 'verifyNoArrAssets' }
 
 // Explicit development-only title-screen smoke run, with runtime mixin audit and screenshot.
 if (providers.gradleProperty('portSmoke').isPresent()) {
-    loom.runs.client { vmArg '-Depicfight.portSmoke=true'; vmArg '-Dmixin.debug.verbose=true' }
+    loom.runs.client { vmArg '-Dopenfight.portSmoke=true'; vmArg '-Dmixin.debug.verbose=true' }
 }

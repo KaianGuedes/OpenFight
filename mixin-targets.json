@@ -1,0 +1,1020 @@
+[
+  {
+    "name": "yesman.epicfight.mixin.common.MixinCrossbowAttack",
+    "targets": [
+      "net/minecraft/world/entity/ai/behavior/CrossbowAttack"
+    ],
+    "injections": [
+      {
+        "kind": "WrapOperation",
+        "selectors": [
+          "crossbowAttack"
+        ],
+        "sites": [
+          "Lnet/minecraft/world/entity/monster/RangedAttackMob;performRangedAttack(Lnet/minecraft/world/entity/LivingEntity;F)V"
+        ]
+      }
+    ]
+  },
+  {
+    "name": "yesman.epicfight.mixin.common.MixinDamageSources",
+    "targets": [
+      "net/minecraft/world/damagesource/DamageSources"
+    ],
+    "injections": [
+      {
+        "kind": "Inject",
+        "selectors": [
+          "mobAttack(Lnet/minecraft/world/entity/LivingEntity;)Lnet/minecraft/world/damagesource/DamageSource;"
+        ],
+        "sites": []
+      },
+      {
+        "kind": "Inject",
+        "selectors": [
+          "playerAttack(Lnet/minecraft/world/entity/player/Player;)Lnet/minecraft/world/damagesource/DamageSource;"
+        ],
+        "sites": []
+      },
+      {
+        "kind": "Inject",
+        "selectors": [
+          "arrow(Lnet/minecraft/world/entity/projectile/arrow/AbstractArrow;Lnet/minecraft/world/entity/Entity;)Lnet/minecraft/world/damagesource/DamageSource;"
+        ],
+        "sites": []
+      },
+      {
+        "kind": "Inject",
+        "selectors": [
+          "witherSkull(Lnet/minecraft/world/entity/projectile/hurtingprojectile/WitherSkull;Lnet/minecraft/world/entity/Entity;)Lnet/minecraft/world/damagesource/DamageSource;"
+        ],
+        "sites": []
+      },
+      {
+        "kind": "Inject",
+        "selectors": [
+          "trident(Lnet/minecraft/world/entity/Entity;Lnet/minecraft/world/entity/Entity;)Lnet/minecraft/world/damagesource/DamageSource;"
+        ],
+        "sites": []
+      }
+    ]
+  },
+  {
+    "name": "yesman.epicfight.mixin.common.MixinEntity",
+    "targets": [
+      "net/minecraft/world/entity/Entity"
+    ],
+    "injections": [
+      {
+        "kind": "Inject",
+        "selectors": [
+          "spawnAtLocation(Lnet/minecraft/server/level/ServerLevel;Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/phys/Vec3;)Lnet/minecraft/world/entity/item/ItemEntity;"
+        ],
+        "sites": []
+      },
+      {
+        "kind": "Inject",
+        "selectors": [
+          "lerpMotion(Lnet/minecraft/world/phys/Vec3;)V"
+        ],
+        "sites": []
+      },
+      {
+        "kind": "ModifyVariable",
+        "selectors": [
+          "turn(DD)V"
+        ],
+        "sites": []
+      },
+      {
+        "kind": "ModifyVariable",
+        "selectors": [
+          "turn(DD)V"
+        ],
+        "sites": []
+      },
+      {
+        "kind": "Inject",
+        "selectors": [
+          "remove(Lnet/minecraft/world/entity/Entity$RemovalReason;)V"
+        ],
+        "sites": []
+      },
+      {
+        "kind": "WrapOperation",
+        "selectors": [
+          "saveWithoutId(Lnet/minecraft/world/level/storage/ValueOutput;)V"
+        ],
+        "sites": [
+          "Lnet/minecraft/world/entity/Entity;addAdditionalSaveData(Lnet/minecraft/world/level/storage/ValueOutput;)V"
+        ]
+      },
+      {
+        "kind": "WrapOperation",
+        "selectors": [
+          "load(Lnet/minecraft/world/level/storage/ValueInput;)V"
+        ],
+        "sites": [
+          "Lnet/minecraft/world/entity/Entity;readAdditionalSaveData(Lnet/minecraft/world/level/storage/ValueInput;)V"
+        ]
+      },
+      {
+        "kind": "Inject",
+        "selectors": [
+          "setOnGroundWithMovement(ZLnet/minecraft/world/phys/Vec3;)V"
+        ],
+        "sites": []
+      }
+    ]
+  },
+  {
+    "name": "yesman.epicfight.mixin.common.MixinEndermanTeleport",
+    "targets": [
+      "net/minecraft/world/entity/monster/Enderman"
+    ],
+    "injections": [
+      {
+        "kind": "Inject",
+        "selectors": [
+          "teleport(DDD)Z"
+        ],
+        "sites": []
+      }
+    ]
+  },
+  {
+    "name": "yesman.epicfight.mixin.common.MixinLivingEntity",
+    "targets": [
+      "net/minecraft/world/entity/LivingEntity"
+    ],
+    "injections": [
+      {
+        "kind": "Inject",
+        "selectors": [
+          "knockback(DDDLnet/minecraft/world/damagesource/DamageSource;FZ)V"
+        ],
+        "sites": []
+      },
+      {
+        "kind": "Inject",
+        "selectors": [
+          "dropAllDeathLoot(Lnet/minecraft/server/level/ServerLevel;Lnet/minecraft/world/damagesource/DamageSource;)V"
+        ],
+        "sites": []
+      },
+      {
+        "kind": "Inject",
+        "selectors": [
+          "dropAllDeathLoot(Lnet/minecraft/server/level/ServerLevel;Lnet/minecraft/world/damagesource/DamageSource;)V"
+        ],
+        "sites": []
+      },
+      {
+        "kind": "Inject",
+        "selectors": [
+          "<init>(Lnet/minecraft/world/entity/EntityType;Lnet/minecraft/world/level/Level;)V"
+        ],
+        "sites": []
+      },
+      {
+        "kind": "Inject",
+        "selectors": [
+          "blockedByItem(Lnet/minecraft/world/entity/LivingEntity;Lnet/minecraft/world/damagesource/DamageSource;FZ)V"
+        ],
+        "sites": []
+      },
+      {
+        "kind": "Inject",
+        "selectors": [
+          "hurtServer(Lnet/minecraft/server/level/ServerLevel;Lnet/minecraft/world/damagesource/DamageSource;F)Z"
+        ],
+        "sites": []
+      },
+      {
+        "kind": "Inject",
+        "selectors": [
+          "push(Lnet/minecraft/world/entity/Entity;)V"
+        ],
+        "sites": []
+      },
+      {
+        "kind": "Inject",
+        "selectors": [
+          "getDamageAfterArmorAbsorb(Lnet/minecraft/world/damagesource/DamageSource;F)F"
+        ],
+        "sites": []
+      },
+      {
+        "kind": "Inject",
+        "selectors": [
+          "setAbsorptionAmount(F)V"
+        ],
+        "sites": []
+      },
+      {
+        "kind": "Inject",
+        "selectors": [
+          "makePoofParticles()V"
+        ],
+        "sites": []
+      },
+      {
+        "kind": "WrapOperation",
+        "selectors": [
+          "jumpFromGround()V"
+        ],
+        "sites": [
+          "Lnet/minecraft/world/entity/LivingEntity;getYRot()F"
+        ]
+      },
+      {
+        "kind": "WrapOperation",
+        "selectors": [
+          "tick()V"
+        ],
+        "sites": [
+          "Lnet/minecraft/world/entity/LivingEntity;getYRot()F"
+        ]
+      },
+      {
+        "kind": "WrapOperation",
+        "selectors": [
+          "tickHeadTurn(F)V"
+        ],
+        "sites": [
+          "Lnet/minecraft/world/entity/LivingEntity;getYRot()F"
+        ]
+      }
+    ]
+  },
+  {
+    "name": "yesman.epicfight.mixin.common.MixinMob",
+    "targets": [
+      "net/minecraft/world/entity/Mob"
+    ],
+    "injections": [
+      {
+        "kind": "Inject",
+        "selectors": [
+          "serverAiStep()V"
+        ],
+        "sites": []
+      }
+    ]
+  },
+  {
+    "name": "yesman.epicfight.mixin.common.MixinPlayer",
+    "targets": [
+      "net/minecraft/world/entity/player/Player"
+    ],
+    "injections": [
+      {
+        "kind": "WrapOperation",
+        "selectors": [
+          "actuallyHurt(Lnet/minecraft/server/level/ServerLevel;Lnet/minecraft/world/damagesource/DamageSource;F)V"
+        ],
+        "sites": [
+          "Lnet/minecraft/world/damagesource/CombatTracker;recordDamage(Lnet/minecraft/world/damagesource/DamageSource;F)V"
+        ]
+      },
+      {
+        "kind": "WrapOperation",
+        "selectors": [
+          "aiStep()V"
+        ],
+        "sites": [
+          "Lnet/minecraft/world/entity/player/Player;getYRot()F"
+        ]
+      }
+    ]
+  },
+  {
+    "name": "yesman.epicfight.mixin.common.MixinProjectile",
+    "targets": [
+      "net/minecraft/world/entity/projectile/Projectile"
+    ],
+    "injections": []
+  },
+  {
+    "name": "yesman.epicfight.mixin.common.MixinProjectileImpact",
+    "targets": [
+      "net/minecraft/world/entity/projectile/Projectile"
+    ],
+    "injections": [
+      {
+        "kind": "Inject",
+        "selectors": [
+          "hitTargetOrDeflectSelf(Lnet/minecraft/world/phys/HitResult;)Lnet/minecraft/world/entity/projectile/ProjectileDeflection;"
+        ],
+        "sites": []
+      }
+    ]
+  },
+  {
+    "name": "yesman.epicfight.mixin.common.MixinReloadableServerResources",
+    "targets": [
+      "net/minecraft/server/ReloadableServerResources"
+    ],
+    "injections": [
+      {
+        "kind": "Inject",
+        "selectors": [
+          "updateComponentsAndStaticRegistryTags"
+        ],
+        "sites": []
+      }
+    ]
+  },
+  {
+    "name": "yesman.epicfight.mixin.common.MixinRangedAttackGoal",
+    "targets": [
+      "net/minecraft/world/entity/ai/goal/RangedAttackGoal"
+    ],
+    "injections": [
+      {
+        "kind": "WrapOperation",
+        "selectors": [
+          "tick()V"
+        ],
+        "sites": [
+          "Lnet/minecraft/world/entity/monster/RangedAttackMob;performRangedAttack(Lnet/minecraft/world/entity/LivingEntity;F)V"
+        ]
+      }
+    ]
+  },
+  {
+    "name": "yesman.epicfight.mixin.common.MixinRangedBowAttackGoal",
+    "targets": [
+      "net/minecraft/world/entity/ai/goal/RangedBowAttackGoal"
+    ],
+    "injections": [
+      {
+        "kind": "WrapOperation",
+        "selectors": [
+          "tick()V"
+        ],
+        "sites": [
+          "Lnet/minecraft/world/entity/monster/RangedAttackMob;performRangedAttack(Lnet/minecraft/world/entity/LivingEntity;F)V"
+        ]
+      }
+    ]
+  },
+  {
+    "name": "yesman.epicfight.mixin.common.MixinRangedCrossbowAttackGoal",
+    "targets": [
+      "net/minecraft/world/entity/ai/goal/RangedCrossbowAttackGoal"
+    ],
+    "injections": [
+      {
+        "kind": "WrapOperation",
+        "selectors": [
+          "tick()V"
+        ],
+        "sites": [
+          "Lnet/minecraft/world/entity/monster/RangedAttackMob;performRangedAttack(Lnet/minecraft/world/entity/LivingEntity;F)V"
+        ]
+      }
+    ]
+  },
+  {
+    "name": "yesman.epicfight.mixin.common.MixinServerCommonPacketListenerImpl",
+    "targets": [
+      "net/minecraft/server/network/ServerCommonPacketListenerImpl"
+    ],
+    "injections": [
+      {
+        "kind": "Inject",
+        "selectors": [
+          "handleResourcePackResponse(Lnet/minecraft/network/protocol/common/ServerboundResourcePackPacket;)V"
+        ],
+        "sites": []
+      }
+    ]
+  },
+  {
+    "name": "yesman.epicfight.mixin.common.MixinServerPlayerDimension",
+    "targets": [
+      "net/minecraft/server/level/ServerPlayer"
+    ],
+    "injections": [
+      {
+        "kind": "Inject",
+        "selectors": [
+          "teleport(Lnet/minecraft/world/level/portal/TeleportTransition;)Lnet/minecraft/server/level/ServerPlayer;"
+        ],
+        "sites": []
+      },
+      {
+        "kind": "Inject",
+        "selectors": [
+          "teleport(Lnet/minecraft/world/level/portal/TeleportTransition;)Lnet/minecraft/server/level/ServerPlayer;"
+        ],
+        "sites": []
+      }
+    ]
+  },
+  {
+    "name": "yesman.epicfight.mixin.common.MixinServerEntity",
+    "targets": [
+      "net/minecraft/server/level/ServerEntity"
+    ],
+    "injections": [
+      {
+        "kind": "Inject",
+        "selectors": [
+          "sendDirtyEntityData()V"
+        ],
+        "sites": []
+      }
+    ]
+  },
+  {
+    "name": "yesman.epicfight.mixin.common.MixinThrownTrident",
+    "targets": [
+      "net/minecraft/world/entity/projectile/arrow/ThrownTrident"
+    ],
+    "injections": [
+      {
+        "kind": "WrapOperation",
+        "selectors": [
+          "tick()V"
+        ],
+        "sites": [
+          "Lnet/minecraft/world/entity/projectile/arrow/ThrownTrident;setPosRaw(DDD)V"
+        ]
+      },
+      {
+        "kind": "WrapOperation",
+        "selectors": [
+          "tick()V"
+        ],
+        "sites": [
+          "Lnet/minecraft/world/entity/projectile/arrow/ThrownTrident;setDeltaMovement(Lnet/minecraft/world/phys/Vec3;)V"
+        ]
+      },
+      {
+        "kind": "Inject",
+        "selectors": [
+          "tick()V"
+        ],
+        "sites": []
+      },
+      {
+        "kind": "WrapOperation",
+        "selectors": [
+          "playerTouch(Lnet/minecraft/world/entity/player/Player;)V"
+        ],
+        "sites": [
+          "Lnet/minecraft/world/entity/projectile/arrow/AbstractArrow;playerTouch(Lnet/minecraft/world/entity/player/Player;)V"
+        ]
+      }
+    ]
+  },
+  {
+    "name": "yesman.epicfight.mixin.common.MixinTridentAttack",
+    "targets": [
+      "net/minecraft/world/item/TridentItem"
+    ],
+    "injections": [
+      {
+        "kind": "Inject",
+        "selectors": [
+          "releaseUsing"
+        ],
+        "sites": [
+          "Lnet/minecraft/world/entity/projectile/Projectile;spawnProjectileFromRotation(Lnet/minecraft/world/entity/projectile/Projectile$ProjectileFactory;Lnet/minecraft/server/level/ServerLevel;Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/entity/LivingEntity;FFF)Lnet/minecraft/world/entity/projectile/Projectile;"
+        ]
+      }
+    ]
+  },
+  {
+    "name": "yesman.epicfight.mixin.common.MixinWitherBoss",
+    "targets": [
+      "net/minecraft/world/entity/boss/wither/WitherBoss"
+    ],
+    "injections": [
+      {
+        "kind": "Inject",
+        "selectors": [
+          "<init>"
+        ],
+        "sites": []
+      },
+      {
+        "kind": "Inject",
+        "selectors": [
+          "aiStep()V"
+        ],
+        "sites": []
+      },
+      {
+        "kind": "Inject",
+        "selectors": [
+          "customServerAiStep(Lnet/minecraft/server/level/ServerLevel;)V"
+        ],
+        "sites": []
+      }
+    ]
+  },
+  {
+    "name": "yesman.epicfight.mixin.common.MixinWitherBossAccessor",
+    "targets": [
+      "net/minecraft/world/entity/boss/wither/WitherBoss"
+    ],
+    "injections": []
+  },
+  {
+    "name": "yesman.epicfight.mixin.common.fabric.EntityConstructionMixin",
+    "targets": [
+      "net/minecraft/world/entity/Entity"
+    ],
+    "injections": [
+      {
+        "kind": "Inject",
+        "selectors": [
+          "<init>(Lnet/minecraft/world/entity/EntityType;Lnet/minecraft/world/level/Level;)V"
+        ],
+        "sites": []
+      }
+    ]
+  },
+  {
+    "name": "yesman.epicfight.mixin.common.fabric.EntityTickMixin",
+    "targets": [
+      "net/minecraft/server/level/ServerLevel"
+    ],
+    "injections": [
+      {
+        "kind": "WrapOperation",
+        "selectors": [
+          "tickNonPassenger(Lnet/minecraft/world/entity/Entity;)V"
+        ],
+        "sites": [
+          "Lnet/minecraft/world/entity/Entity;tick()V"
+        ]
+      },
+      {
+        "kind": "WrapOperation",
+        "selectors": [
+          "tickPassenger(Lnet/minecraft/world/entity/Entity;Lnet/minecraft/world/entity/Entity;)V"
+        ],
+        "sites": [
+          "Lnet/minecraft/world/entity/Entity;rideTick()V"
+        ]
+      }
+    ]
+  },
+  {
+    "name": "yesman.epicfight.mixin.client.fabric.ClientEntityTickMixin",
+    "targets": [
+      "net/minecraft/client/multiplayer/ClientLevel"
+    ],
+    "injections": [
+      {
+        "kind": "WrapOperation",
+        "selectors": [
+          "tickNonPassenger(Lnet/minecraft/world/entity/Entity;)V"
+        ],
+        "sites": [
+          "Lnet/minecraft/world/entity/Entity;tick()V"
+        ]
+      },
+      {
+        "kind": "WrapOperation",
+        "selectors": [
+          "tickPassenger(Lnet/minecraft/world/entity/Entity;Lnet/minecraft/world/entity/Entity;)V"
+        ],
+        "sites": [
+          "Lnet/minecraft/world/entity/Entity;rideTick()V"
+        ]
+      }
+    ]
+  },
+  {
+    "name": "yesman.epicfight.mixin.client.MixinAbstractContainerEventHandler",
+    "targets": [
+      "net/minecraft/client/gui/components/events/AbstractContainerEventHandler"
+    ],
+    "injections": [
+      {
+        "kind": "Inject",
+        "selectors": [
+          "setFocused(Lnet/minecraft/client/gui/components/events/GuiEventListener;)V"
+        ],
+        "sites": []
+      }
+    ]
+  },
+  {
+    "name": "yesman.epicfight.mixin.client.MixinFirstPersonHandsAndItemsRenderer",
+    "targets": [
+      "net/minecraft/client/renderer/FirstPersonHandsAndItemsRenderer"
+    ],
+    "injections": [
+      {
+        "kind": "Inject",
+        "selectors": [
+          "submitArmWithItem"
+        ],
+        "sites": []
+      }
+    ]
+  },
+  {
+    "name": "yesman.epicfight.mixin.client.MixinCamera",
+    "targets": [
+      "net/minecraft/client/Camera"
+    ],
+    "injections": [
+      {
+        "kind": "Inject",
+        "selectors": [
+          "alignWithEntity(F)V"
+        ],
+        "sites": []
+      },
+      {
+        "kind": "Inject",
+        "selectors": [
+          "alignWithEntity(F)V"
+        ],
+        "sites": []
+      }
+    ]
+  },
+  {
+    "name": "yesman.epicfight.mixin.client.MixinClientCommonPacketListenerImpl",
+    "targets": [
+      "net/minecraft/client/multiplayer/ClientCommonPacketListenerImpl"
+    ],
+    "injections": [
+      {
+        "kind": "Inject",
+        "selectors": [
+          "send(Lnet/minecraft/network/protocol/Packet;)V"
+        ],
+        "sites": []
+      }
+    ]
+  },
+  {
+    "name": "yesman.epicfight.mixin.client.MixinClientPacketListener",
+    "targets": [
+      "net/minecraft/client/multiplayer/ClientPacketListener"
+    ],
+    "injections": [
+      {
+        "kind": "Inject",
+        "selectors": [
+          "handleRespawn(Lnet/minecraft/network/protocol/game/ClientboundRespawnPacket;)V"
+        ],
+        "sites": []
+      }
+    ]
+  },
+  {
+    "name": "yesman.epicfight.mixin.client.MixinEnderDragonRenderer",
+    "targets": [
+      "net/minecraft/client/renderer/entity/EnderDragonRenderer"
+    ],
+    "injections": [
+      {
+        "kind": "Inject",
+        "selectors": [
+          "submit(Lnet/minecraft/client/renderer/entity/state/EnderDragonRenderState;Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/SubmitNodeCollector;Lnet/minecraft/client/renderer/state/level/CameraRenderState;)V"
+        ],
+        "sites": []
+      }
+    ]
+  },
+  {
+    "name": "yesman.epicfight.mixin.client.MixinEntityRenderState",
+    "targets": [
+      "net/minecraft/client/renderer/entity/state/EntityRenderState"
+    ],
+    "injections": []
+  },
+  {
+    "name": "yesman.epicfight.mixin.client.MixinEntityRenderDispatcher",
+    "targets": [
+      "net/minecraft/client/renderer/entity/EntityRenderDispatcher"
+    ],
+    "injections": [
+      {
+        "kind": "WrapOperation",
+        "selectors": [
+          "submit(Lnet/minecraft/client/renderer/entity/state/EntityRenderState;Lnet/minecraft/client/renderer/state/level/CameraRenderState;DDDLcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/SubmitNodeCollector;)V"
+        ],
+        "sites": [
+          "Lnet/minecraft/client/renderer/entity/EntityRenderer;submit(Lnet/minecraft/client/renderer/entity/state/EntityRenderState;Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/SubmitNodeCollector;Lnet/minecraft/client/renderer/state/level/CameraRenderState;)V"
+        ]
+      }
+    ]
+  },
+  {
+    "name": "yesman.epicfight.mixin.client.MixinEntityRenderer",
+    "targets": [
+      "net/minecraft/client/renderer/entity/EntityRenderer"
+    ],
+    "injections": []
+  },
+  {
+    "name": "yesman.epicfight.mixin.client.MixinEntityRendererCapture",
+    "targets": [
+      "net/minecraft/client/renderer/entity/EntityRenderer"
+    ],
+    "injections": [
+      {
+        "kind": "Inject",
+        "selectors": [
+          "createRenderState(Lnet/minecraft/world/entity/Entity;F)Lnet/minecraft/client/renderer/entity/state/EntityRenderState;"
+        ],
+        "sites": []
+      }
+    ]
+  },
+  {
+    "name": "yesman.epicfight.mixin.client.MixinGui",
+    "targets": [
+      "net/minecraft/client/gui/Hud"
+    ],
+    "injections": [
+      {
+        "kind": "Inject",
+        "selectors": [
+          "extractCrosshair(Lnet/minecraft/client/gui/GuiGraphicsExtractor;Lnet/minecraft/client/DeltaTracker;)V"
+        ],
+        "sites": []
+      },
+      {
+        "kind": "WrapOperation",
+        "selectors": [
+          "extractCrosshair(Lnet/minecraft/client/gui/GuiGraphicsExtractor;Lnet/minecraft/client/DeltaTracker;)V"
+        ],
+        "sites": [
+          "Lnet/minecraft/client/gui/GuiGraphicsExtractor;blitSprite(Lcom/mojang/renderpearl/api/pipeline/RenderPipeline;Lnet/minecraft/resources/Identifier;IIII)V"
+        ]
+      }
+    ]
+  },
+  {
+    "name": "yesman.epicfight.mixin.client.MixinInventory",
+    "targets": [
+      "net/minecraft/world/entity/player/Inventory"
+    ],
+    "injections": [
+      {
+        "kind": "Inject",
+        "selectors": [
+          "setSelectedSlot(I)V"
+        ],
+        "sites": []
+      }
+    ]
+  },
+  {
+    "name": "yesman.epicfight.mixin.client.MixinInputConstants",
+    "targets": [
+      "com/mojang/blaze3d/platform/InputConstants"
+    ],
+    "injections": [
+      {
+        "kind": "Inject",
+        "selectors": [
+          "isKeyDown(I)Z"
+        ],
+        "sites": []
+      }
+    ]
+  },
+  {
+    "name": "yesman.epicfight.mixin.client.MixinKeyboardHandler",
+    "targets": [
+      "net/minecraft/client/KeyboardHandler"
+    ],
+    "injections": [
+      {
+        "kind": "Inject",
+        "selectors": [
+          "handleDebugKeys(Lnet/minecraft/client/input/KeyEvent;)Z"
+        ],
+        "sites": []
+      }
+    ]
+  },
+  {
+    "name": "yesman.epicfight.mixin.client.MixinLevelRenderer",
+    "targets": [
+      "net/minecraft/client/renderer/entity/EntityRenderer"
+    ],
+    "injections": [
+      {
+        "kind": "Inject",
+        "selectors": [
+          "extractRenderState(Lnet/minecraft/world/entity/Entity;Lnet/minecraft/client/renderer/entity/state/EntityRenderState;F)V"
+        ],
+        "sites": []
+      }
+    ]
+  },
+  {
+    "name": "yesman.epicfight.mixin.client.MixinLightTexture",
+    "targets": [
+      "net/minecraft/client/renderer/LightmapRenderStateExtractor"
+    ],
+    "injections": [
+      {
+        "kind": "Inject",
+        "selectors": [
+          "extract(Lnet/minecraft/client/renderer/state/LightmapRenderState;F)V"
+        ],
+        "sites": []
+      },
+      {
+        "kind": "Inject",
+        "selectors": [
+          "extract(Lnet/minecraft/client/renderer/state/LightmapRenderState;F)V"
+        ],
+        "sites": []
+      }
+    ]
+  },
+  {
+    "name": "yesman.epicfight.mixin.client.MixinLivingEntityRenderer",
+    "targets": [
+      "net/minecraft/client/renderer/entity/LivingEntityRenderer"
+    ],
+    "injections": []
+  },
+  {
+    "name": "yesman.epicfight.mixin.client.MixinLocalPlayer",
+    "targets": [
+      "net/minecraft/client/player/LocalPlayer"
+    ],
+    "injections": [
+      {
+        "kind": "Inject",
+        "selectors": [
+          "sendChanges()V"
+        ],
+        "sites": [
+          "Lnet/minecraft/client/player/LocalPlayer;sendPosition()V"
+        ]
+      },
+      {
+        "kind": "Inject",
+        "selectors": [
+          "canDropItems()Z"
+        ],
+        "sites": []
+      }
+    ]
+  },
+  {
+    "name": "yesman.epicfight.mixin.client.MixinMeshData",
+    "targets": [
+      "com/mojang/blaze3d/vertex/MeshData"
+    ],
+    "injections": [
+      {
+        "kind": "Inject",
+        "selectors": [
+          "sortQuads(Lcom/mojang/blaze3d/vertex/ByteBufferBuilder;Lcom/mojang/blaze3d/vertex/VertexSorting;)Lcom/mojang/blaze3d/vertex/MeshData$SortState;"
+        ],
+        "sites": []
+      }
+    ]
+  },
+  {
+    "name": "yesman.epicfight.mixin.client.MixinMinecraft",
+    "targets": [
+      "net/minecraft/client/Minecraft"
+    ],
+    "injections": [
+      {
+        "kind": "Inject",
+        "selectors": [
+          "handleKeybinds()V"
+        ],
+        "sites": []
+      },
+      {
+        "kind": "Inject",
+        "selectors": [
+          "handleKeybinds()V"
+        ],
+        "sites": [
+          "Lnet/minecraft/client/Options;setCameraType(Lnet/minecraft/client/CameraType;)V"
+        ]
+      },
+      {
+        "kind": "Inject",
+        "selectors": [
+          "shouldEntityAppearGlowing(Lnet/minecraft/world/entity/Entity;)Z"
+        ],
+        "sites": []
+      },
+      {
+        "kind": "Inject",
+        "selectors": [
+          "startAttack"
+        ],
+        "sites": []
+      },
+      {
+        "kind": "Inject",
+        "selectors": [
+          "continueAttack"
+        ],
+        "sites": []
+      },
+      {
+        "kind": "Inject",
+        "selectors": [
+          "pick(F)V"
+        ],
+        "sites": []
+      },
+      {
+        "kind": "Inject",
+        "selectors": [
+          "startUseItem"
+        ],
+        "sites": [
+          "Lnet/minecraft/client/player/LocalPlayer;swing(Lnet/minecraft/world/InteractionHand;Lnet/minecraft/world/item/component/SwingAnimation;Z)Z"
+        ]
+      }
+    ]
+  },
+  {
+    "name": "yesman.epicfight.mixin.client.MixinMouseHandler",
+    "targets": [
+      "net/minecraft/client/MouseHandler"
+    ],
+    "injections": [
+      {
+        "kind": "WrapOperation",
+        "selectors": [
+          "turnPlayer(D)V"
+        ],
+        "sites": [
+          "Lnet/minecraft/client/player/LocalPlayer;turn(DD)V"
+        ]
+      }
+    ]
+  },
+  {
+    "name": "yesman.epicfight.mixin.client.MixinOptions",
+    "targets": [
+      "net/minecraft/client/Options"
+    ],
+    "injections": [
+      {
+        "kind": "Inject",
+        "selectors": [
+          "setCameraType"
+        ],
+        "sites": []
+      }
+    ]
+  },
+  {
+    "name": "yesman.epicfight.mixin.client.MixinThrownTridentRenderer",
+    "targets": [
+      "net/minecraft/client/renderer/entity/ThrownTridentRenderer"
+    ],
+    "injections": [
+      {
+        "kind": "Inject",
+        "selectors": [
+          "submit(Lnet/minecraft/client/renderer/entity/state/ThrownTridentRenderState;Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/SubmitNodeCollector;Lnet/minecraft/client/renderer/state/level/CameraRenderState;)V"
+        ],
+        "sites": [
+          "Lcom/mojang/blaze3d/vertex/PoseStack;rotateDegrees(Lcom/mojang/math/Axis;F)V"
+        ]
+      },
+      {
+        "kind": "Inject",
+        "selectors": [
+          "submit(Lnet/minecraft/client/renderer/entity/state/ThrownTridentRenderState;Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/SubmitNodeCollector;Lnet/minecraft/client/renderer/state/level/CameraRenderState;)V"
+        ],
+        "sites": []
+      }
+    ]
+  },
+  {
+    "name": "yesman.epicfight.mixin.client.MixinEntityRendererReload",
+    "targets": [
+      "net/minecraft/client/renderer/entity/EntityRenderDispatcher"
+    ],
+    "injections": [
+      {
+        "kind": "Inject",
+        "selectors": [
+          "onResourceManagerReload(Lnet/minecraft/server/packs/resources/ResourceManager;)V"
+        ],
+        "sites": []
+      }
+    ]
+  }
+]
