@@ -38,7 +38,7 @@ public interface Mesh {
 	
 	/* Universal method */
 	default void draw(PoseStack poseStack, MultiBufferSource bufferSources, RenderType renderType, Mesh.DrawingFunction drawingFunction, int packedLight, float r, float g, float b, float a, int overlay, @Nullable Armature armature, OpenMatrix4f[] poses) {
-		this.drawPosed(poseStack, bufferSources.getBuffer(EpicFightRenderTypes.getTriangulated(renderType)), drawingFunction, packedLight, r, g, b, a, overlay, armature, poses);
+		this.drawPosed(poseStack, bufferSources.getBuffer(renderType), drawingFunction, packedLight, r, g, b, a, overlay, armature, poses);
 	}
 	
 	public static record RenderProperties(Identifier customTexturePath, Vec3f customColor, boolean isTransparent) {

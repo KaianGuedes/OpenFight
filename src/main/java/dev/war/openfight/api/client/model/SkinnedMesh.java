@@ -212,6 +212,7 @@ public class SkinnedMesh extends StaticMesh<SkinnedMeshPart> {
 					ComputeShaderSetup.TOTAL_NORMALS[i] = ComputeShaderSetup.TOTAL_POSES[i].removeTranslation();
 				}
 				
+				int vertexIndex = 0;
 				for (VertexBuilder vi : part.getVertices()) {
 					this.getVertexPosition(vi.position, POSITION, ComputeShaderSetup.TOTAL_POSES);
 					this.getVertexNormal(vi.position, vi.normal, NORMAL, ComputeShaderSetup.TOTAL_NORMALS);
@@ -220,6 +221,10 @@ public class SkinnedMesh extends StaticMesh<SkinnedMeshPart> {
 					NORMAL.mul(normal);
 					
 					drawingFunction.draw(bufferbuilder, POSITION.x, POSITION.y, POSITION.z, NORMAL.x, NORMAL.y, NORMAL.z, packedLight, r, g, b, a, this.uvs[vi.uv * 2], this.uvs[vi.uv * 2 + 1], overlay);
+					if (vertexIndex % 3 == 2) {
+						drawingFunction.draw(bufferbuilder, POSITION.x, POSITION.y, POSITION.z, NORMAL.x, NORMAL.y, NORMAL.z, packedLight, r, g, b, a, this.uvs[vi.uv * 2], this.uvs[vi.uv * 2 + 1], overlay);
+					}
+					vertexIndex++;
 				}
 			}
 		}
@@ -236,11 +241,9 @@ public class SkinnedMesh extends StaticMesh<SkinnedMeshPart> {
 
 	@Override
 	public void draw(PoseStack poseStack, MultiBufferSource bufferSources, RenderType renderType, Mesh.DrawingFunction drawingFunction, int packedLight, float r, float g, float b, float a, int overlay, @Nullable Armature armature, OpenMatrix4f[] poses) {
-        if (ClientConfig.activateComputeShader && this.computerShaderSetup != null) {
-			this.computerShaderSetup.drawWithShader(this, poseStack, bufferSources, EpicFightRenderTypes.getTriangulated(renderType), packedLight, r, g, b, a, overlay, armature, poses);
-		} else {
-			this.drawPosed(poseStack, bufferSources.getBuffer(EpicFightRenderTypes.getTriangulated(renderType)), drawingFunction, packedLight, r, g, b, a, overlay, armature, poses);
-		}
+		// Compute output is a triangle list and bypasses the entity vertex consumer. Keep mesh
+		// rendering on vanilla's quad pipeline so shader loaders receive their expected format.
+		this.drawPosed(poseStack, bufferSources.getBuffer(renderType), drawingFunction, packedLight, r, g, b, a, overlay, armature, poses);
 	}
 	
 	public int getMaxJointCount() {
@@ -288,12 +291,16 @@ public class SkinnedMesh extends StaticMesh<SkinnedMeshPart> {
 			Matrix4f pose = poseStack.last().pose();
 			Matrix3f normal = poseStack.last().normal();
 			
+			int vertexIndex = 0;
 			for (VertexBuilder vi : this.getVertices()) {
 				getVertexPosition(vi.position, POSITION);
 				getVertexNormal(vi.normal, NORMAL);
 				POSITION.mul(pose);
 				NORMAL.mul(normal);
 				drawingFunction.draw(bufferBuilder, POSITION.x(), POSITION.y(), POSITION.z(), NORMAL.x(), NORMAL.y(), NORMAL.z(), packedLight, color.x, color.y, color.z, color.w, uvs[vi.uv * 2], uvs[vi.uv * 2 + 1], overlay);
+				if (vertexIndex++ % 3 == 2) {
+					drawingFunction.draw(bufferBuilder, POSITION.x(), POSITION.y(), POSITION.z(), NORMAL.x(), NORMAL.y(), NORMAL.z(), packedLight, color.x, color.y, color.z, color.w, uvs[vi.uv * 2], uvs[vi.uv * 2 + 1], overlay);
+				}
 			}
 		}
 	}

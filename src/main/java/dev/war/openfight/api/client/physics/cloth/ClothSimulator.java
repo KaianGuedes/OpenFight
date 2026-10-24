@@ -492,6 +492,11 @@ public class ClothSimulator extends AbstractSimulator<Identifier, ClothObjectBui
 					NORMAL.mul(matrix3f);
 					
 					drawingFunction.draw(bufferBuilder, POSITION.x, POSITION.y, POSITION.z, NORMAL.x(), NORMAL.y(), NORMAL.z(), packedLight, color.x, color.y, color.z, color.w, uvs[vb.uv * 2], uvs[vb.uv * 2 + 1], overlay);
+					
+					// Triangle list -> degenerate quad, see ClassicMesh.
+					if (i % 3 == 2) {
+						drawingFunction.draw(bufferBuilder, POSITION.x, POSITION.y, POSITION.z, NORMAL.x(), NORMAL.y(), NORMAL.z(), packedLight, color.x, color.y, color.z, color.w, uvs[vb.uv * 2], uvs[vb.uv * 2 + 1], overlay);
+					}
 				}
 			}
 		}
