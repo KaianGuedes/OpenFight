@@ -83,6 +83,7 @@ public class ClassicMesh extends StaticMesh<ClassicMeshPart> {
 			Matrix4f matrix4f = poseStack.last().pose();
 			Matrix3f matrix3f = poseStack.last().normal();
 			
+			int vertexIndex = 0;
 			for (VertexBuilder vi : this.getVertices()) {
 				getVertexPosition(vi.position, POSITION);
 				getVertexNormal(vi.normal, NORMAL);
@@ -90,6 +91,12 @@ public class ClassicMesh extends StaticMesh<ClassicMeshPart> {
 				NORMAL.mul(matrix3f);
 				
 				drawingFunction.draw(bufferbuilder, POSITION.x(), POSITION.y(), POSITION.z(), NORMAL.x(), NORMAL.y(), NORMAL.z(), packedLight, color.x, color.y, color.z, color.w, uvs[vi.uv * 2], uvs[vi.uv * 2 + 1], overlay);
+				// Mesh data is a triangle list. Vanilla entity pipelines (and Iris) consume quads.
+				// Repeating the last vertex makes a quad whose second triangle is degenerate.
+				if (vertexIndex % 3 == 2) {
+					drawingFunction.draw(bufferbuilder, POSITION.x(), POSITION.y(), POSITION.z(), NORMAL.x(), NORMAL.y(), NORMAL.z(), packedLight, color.x, color.y, color.z, color.w, uvs[vi.uv * 2], uvs[vi.uv * 2 + 1], overlay);
+				}
+				vertexIndex++;
 			}
 			
 			poseStack.popPose();

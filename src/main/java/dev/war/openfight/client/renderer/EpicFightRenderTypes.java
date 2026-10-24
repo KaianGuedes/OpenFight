@@ -29,8 +29,8 @@ import dev.war.openfight.EpicFight;
  * Epic Fight's custom render types for the 26.3 RenderPearl pipeline. The old RenderStateShard/CompositeState
  * machinery no longer exists: a render type is now a {@link RenderPipeline} plus a {@link RenderSetup}.
  * <p>
- * Epic Fight meshes are triangulated, so vanilla (QUADS) render types are cloned onto a TRIANGLES pipeline by
- * {@link #getTriangulated(RenderType)}.
+ * Epic Fight meshes are triangle lists, but they are emitted as degenerate quads (last vertex repeated) so that
+ * vanilla QUADS entity render types, and shader loaders such as Iris, handle them natively.
  */
 public final class EpicFightRenderTypes {
 	private static final Identifier WHITE_TEXTURE = EpicFight.identifier("textures/common/white.png");
@@ -73,50 +73,18 @@ public final class EpicFightRenderTypes {
 		return RenderPipelines.register(builder.build());
 	}
 
-	private static final Map<RenderPipeline, RenderPipeline> TRIANGULATED_PIPELINES = new ConcurrentHashMap<> ();
-
+	/** Meshes are emitted as degenerate quads (see Mesh), so vanilla pipelines are used unchanged. */
 	public static RenderPipeline getTriangulated(RenderPipeline pipeline) {
-		if (pipeline.getPrimitiveTopology() == PrimitiveTopology.TRIANGLES) {
-			return pipeline;
-		}
-
-		return TRIANGULATED_PIPELINES.computeIfAbsent(pipeline, base -> derive(base, base.getLocation().getPath().replace("pipeline/", "") + "_triangulated", builder -> builder.withPrimitiveTopology(PrimitiveTopology.TRIANGLES)));
+		return pipeline;
 	}
 
 	/***********************************************************************************************
 	 * Render type transformation                                                                  *
 	 ***********************************************************************************************/
 
-	private static RenderSetup copySetup(RenderSetup source, RenderPipeline pipeline, Map<String, RenderSetup.TextureBinding> textures) {
-		// The OIT pipeline set and the entity outline variant are QUADS based and cannot be reused with triangles.
-		return new RenderSetup(
-			pipeline,
-			null,
-			textures,
-			source.useLightmap,
-			source.useOverlay,
-			source.layeringTransform,
-			source.textureTransform,
-			RenderSetup.OutlineProperty.NONE,
-			null,
-			source.affectsCrumbling,
-			source.sortOnUpload && pipeline.getPrimitiveTopology() == PrimitiveTopology.QUADS,
-			source.forceSolidModelPhase
-		);
-	}
-
-	private static final Function<RenderType, RenderType> TRIANGULATED_RENDER_TYPES = Util.memoize(renderType -> {
-		if (renderType.primitiveTopology() == PrimitiveTopology.TRIANGLES) {
-			return renderType;
-		}
-
-		RenderSetup source = renderType.state;
-		return RenderType.create(renderType.name + "_triangulated", copySetup(source, getTriangulated(source.pipeline), source.textures));
-	});
-
-	/** Returns a TRIANGLES version of the given render type. */
+	/** Meshes are emitted as degenerate quads, so the vanilla render type (and Iris' handling of it) is kept. */
 	public static RenderType getTriangulated(RenderType renderType) {
-		return TRIANGULATED_RENDER_TYPES.apply(renderType);
+		return renderType;
 	}
 
 	public static RenderType makeTriangulated(RenderType renderType) {
@@ -181,16 +149,18 @@ public final class EpicFightRenderTypes {
 			return;
 		}
 
-		uiColorPipeline = derive(RenderPipelines.DEBUG_QUADS, "ui_color", builder -> builder.withDepthStencilState(DepthStencilState.DEFAULT));
-		uiTexturePipeline = derive(RenderPipelines.EYES, "ui_texture", builder -> builder.withDepthStencilState(DepthStencilState.DEFAULT));
+		// These pipelines only renamed vanilla pipelines and were invisible to Iris' program map.
+		// Keep their vanilla identities so shader loaders can classify them normally.
+		uiColorPipeline = RenderPipelines.DEBUG_QUADS;
+		uiTexturePipeline = RenderPipelines.EYES;
 		guiTrianglePipeline = derive(RenderPipelines.GUI, "gui_triangle", builder -> builder.withPrimitiveTopology(PrimitiveTopology.TRIANGLES));
 		guiTexturedTrianglePipeline = derive(RenderPipelines.GUI_TEXTURED, "gui_textured_triangle", builder -> builder.withPrimitiveTopology(PrimitiveTopology.TRIANGLES));
-		overlayModelPipeline = derive(RenderPipelines.ENTITY_TRANSLUCENT, "overlay_model", builder -> builder.withPrimitiveTopology(PrimitiveTopology.TRIANGLES).withCull(false).withDepthStencilState(EQUAL_NO_WRITE));
-		entityParticlePipeline = derive(RenderPipelines.ENTITY_TRANSLUCENT, "entity_particle", builder -> builder.withPrimitiveTopology(PrimitiveTopology.TRIANGLES).withCull(false).withDepthStencilState(EQUAL_NO_WRITE));
+		overlayModelPipeline = derive(RenderPipelines.ENTITY_TRANSLUCENT, "overlay_model", builder -> builder.withCull(false).withDepthStencilState(EQUAL_NO_WRITE));
+		entityParticlePipeline = derive(RenderPipelines.ENTITY_TRANSLUCENT, "entity_particle", builder -> builder.withCull(false).withDepthStencilState(EQUAL_NO_WRITE));
 		itemParticlePipeline = derive(RenderPipelines.ENTITY_TRANSLUCENT, "item_particle", builder -> builder.withCull(false).withDepthStencilState(EQUAL_NO_WRITE));
-		afterimageEntityPipeline = derive(RenderPipelines.TRANSLUCENT_PARTICLE, "entity_afterimage", builder -> builder.withPrimitiveTopology(PrimitiveTopology.TRIANGLES).withCull(false).withDepthStencilState(EQUAL_NO_WRITE));
+		afterimageEntityPipeline = derive(RenderPipelines.TRANSLUCENT_PARTICLE, "entity_afterimage", builder -> builder.withCull(false).withDepthStencilState(EQUAL_NO_WRITE));
 		afterimageItemPipeline = derive(RenderPipelines.TRANSLUCENT_PARTICLE, "item_afterimage", builder -> builder.withCull(false).withDepthStencilState(EQUAL_NO_WRITE));
-		stencilEntityPipeline = derive(RenderPipelines.GUI_TEXTURED, "entity_particle_stencil", builder -> builder.withPrimitiveTopology(PrimitiveTopology.TRIANGLES).withCull(false).withColorTargetState(WRITE_NONE).withDepthStencilState(new DepthStencilState(CompareOp.GREATER_THAN_OR_EQUAL, true)));
+		stencilEntityPipeline = derive(RenderPipelines.GUI_TEXTURED, "entity_particle_stencil", builder -> builder.withCull(false).withColorTargetState(WRITE_NONE).withDepthStencilState(new DepthStencilState(CompareOp.GREATER_THAN_OR_EQUAL, true)));
 		stencilItemPipeline = derive(RenderPipelines.GUI_TEXTURED, "item_particle_stencil", builder -> builder.withCull(false).withColorTargetState(WRITE_NONE).withDepthStencilState(new DepthStencilState(CompareOp.GREATER_THAN_OR_EQUAL, true)));
 		blockHighlightPipeline = derive(RenderPipelines.TRANSLUCENT_BLOCK, "block_highlight", builder -> builder.withCull(false).withDepthStencilState(EQUAL_NO_WRITE));
 	}

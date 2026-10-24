@@ -93,7 +93,7 @@ public class PatchedCapeLayer extends PatchedLayer<AbstractClientPlayer, Abstrac
 		poseStack.translate(-renderLocalMatrix.m30() - x, -renderLocalMatrix.m31() - y, -renderLocalMatrix.m32() - z);
 		poseStack.last().normal().rotate(QuaternionUtils.YP.rotationDegrees(yBodyRot));
 		
-		clothObj.drawPosed(poseStack, buffers.getBuffer(EpicFightRenderTypes.getTriangulated(rendertype)), drawFunction, packedLight, r, g, b, a, OverlayTexture.NO_OVERLAY, entitypatch.getArmature(), poses);
+		clothObj.draw(poseStack, buffers, rendertype, drawFunction, packedLight, r, g, b, a, OverlayTexture.NO_OVERLAY, entitypatch.getArmature(), poses);
 		
 		poseStack.popPose();
 		poseStack.popPose();
