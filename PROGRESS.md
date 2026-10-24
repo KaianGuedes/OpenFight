@@ -14,11 +14,12 @@ Status: DONE
 - `gradlew clean build` passes with the mixin audit and component verifications.
 
 ## In progress
-- Run final `gradlew clean build` and `scripts/smoke_client.py` checks after history cleanup.
+- None.
 
 ## Next
 - None. Final local commits are present; no remote was contacted. `WORKER.md` has been deleted.
 
 ## Final verification
-- `gradlew clean build`: PASS, including `verifyNoArrAssets`, 47 mixin target checks, and the port component verification tasks.
-- `scripts/smoke_client.py`: PASS; title/create-world flow, joined player, combo data, 600 combat ticks, 60 attacks, six weapon switches, three mode toggles, and runtime mixin audit.
+- `gradlew clean build`: PASS after history cleanup, including `verifyNoArrAssets`, 47 mixin target checks, and the port component verification tasks.
+- `scripts/smoke_client.py`: PASS after history cleanup; title/create-world flow, joined player, combo data, 600 combat ticks, 60 attacks, six weapon switches, three mode toggles, and runtime mixin audit.
+- The build-generated models match the pre-deletion backup byte for byte (104/104); `git log --all -- overlay/assets/epicfight/models/item/fabric_port` returns no commits.
