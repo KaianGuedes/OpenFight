@@ -1,9 +1,27 @@
-# Epic Fight personal-use Fabric 26.3 port — incomplete
+# OpenFight
 
-This is an unfinished source port. It does not yet compile into a usable mod. See [PORT_NOTES.md](PORT_NOTES.md) for implemented work, validation, behavior adaptations and the remaining work. Do not publish this tree or its assets.
+OpenFight is a Fabric port of [Epic Fight](https://github.com/Epic-Fight/epicfight/) for Minecraft 26.3. It preserves Epic Fight's `epicfight` resource and registry namespace so existing datapacks and resource packs can continue to use their IDs. OpenFight is an independent project and is not affiliated with or endorsed by the Epic Fight team.
 
-From this directory, run `py -3 scripts/build.py build` to compile with the supplied Java 25 installation and save diagnostics in latest-build.log. Direct PowerShell build instructions are in PORT_NOTES.md.
+The repository contains no Epic Fight All Rights Reserved assets. At build time, Gradle assembles assets from the pinned `upstream/` submodule and applies the small `overlay/assets/` set of port additions and translation changes. Do not commit or redistribute Epic Fight assets; public forks must replace all original assets with original work.
 
-The full build compiles combat, skills, animation, renderer and GUI sources. Only nested optional compatibility modules, the top-level NeoForge platform directory and unused recipe/tag data generators are excluded. The old client platform bridges are still in the compile backlog. Passing the separately named component verification tasks does not mean the full mod is playable.
+## Build
 
-Reports: [COMPILE_BACKLOG.md](COMPILE_BACKLOG.md), [MIXIN_AUDIT.txt](MIXIN_AUDIT.txt), [ACCESS_MIGRATION.txt](ACCESS_MIGRATION.txt), [ASSET_INVENTORY.json](ASSET_INVENTORY.json).
+Install JDK 25, then clone the repository with its pinned asset source:
+
+```sh
+git clone --recursive https://github.com/KaianGuedes/OpenFight.git
+cd OpenFight
+./gradlew build
+```
+
+On Windows, run `gradlew.bat build`. Gradle writes the development jar under `build/libs/`. No jar is published by this project; build it locally from source.
+
+## Credits and fork terms
+
+Epic Fight is created by [Yesman](https://github.com/Yesssssman) and its contributors. OpenFight is based on Epic Fight source code and credits the original project at [github.com/Epic-Fight/epicfight](https://github.com/Epic-Fight/epicfight/). Epic Fight's README permits third-party redistribution of code forks when the original assets are removed and replaced with original assets, the fork uses a distinct name, attribution and a project link are provided, and the Epic Fight project receives a non-exclusive, worldwide, royalty-free license to use, copy, modify, and distribute the fork's modifications with appropriate attribution.
+
+OpenFight's code is licensed under [GNU GPL-3.0-or-later](LICENSE). The upstream Epic Fight project and its contributors are granted the additional fork license described above for modifications made in this repository.
+
+## AI assistance
+
+AI coding tools assisted with porting, rebranding, and repository maintenance. Human review and testing remain ongoing.
