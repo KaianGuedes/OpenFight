@@ -153,6 +153,26 @@ public final class PortClientSmoke {
         EpicFightMod.LOGGER.info("PORT_SMOKE_COMBAT_STARTED player={} ticks=600", player.getGameProfile().name());
     }
 
+    /** Opt-in (-Dopenfight.smokeScreenshots=true): saves run/screenshots/smoke_<view>_<tick>.png for visual checks. */
+    private static void captureSmokeScreenshot(int tick) {
+        net.minecraft.client.CameraType view = switch (tick) {
+            case 260, 262 -> net.minecraft.client.CameraType.THIRD_PERSON_BACK;
+            case 300, 302 -> net.minecraft.client.CameraType.FIRST_PERSON;
+            case 340, 342 -> net.minecraft.client.CameraType.THIRD_PERSON_FRONT;
+            default -> null;
+        };
+        if (view == null) return;
+        final boolean shoot = tick % 2 == 0 && (tick == 262 || tick == 302 || tick == 342);
+        final Minecraft client = smokeClient;
+        client.execute(() -> {
+            if (!shoot) {
+                client.options.setCameraType(view);
+                return;
+            }
+            net.minecraft.client.Screenshot.grab(client.gameDirectory, "smoke_" + view.name().toLowerCase() + "_" + tick + ".png", client.gameRenderer.mainRenderTarget(), 1, message -> { });
+        });
+    }
+
     private static void tickCombatSmoke(MinecraftServer server) {
         if (combatPlayerId == null || combatTicks >= 600) return;
         ServerPlayer player = server.getPlayerList().getPlayer(combatPlayerId);
@@ -190,6 +210,10 @@ public final class PortClientSmoke {
                 patch.toMode(next, true);
                 modeToggleCount++;
             }
+        }
+
+        if (Boolean.getBoolean("openfight.smokeScreenshots")) {
+            captureSmokeScreenshot(combatTicks);
         }
 
         if (combatTicks % 10 == 0) {
