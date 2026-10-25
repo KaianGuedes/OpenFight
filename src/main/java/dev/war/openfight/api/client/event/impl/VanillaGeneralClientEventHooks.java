@@ -94,8 +94,10 @@ public final class VanillaGeneralClientEventHooks {
             ((EpicFightGameRules.ConfigurableGameRule<Object, ?, ?>)gamerule).setRuleValue(newPlayer.level(), val);
         });
 
-        ControlEngine.getInstance().reloadPlayerPatch(newCap);
-        RenderEngine.getInstance().initHUD(newCap);
+        if (newCap != null) {
+            ControlEngine.getInstance().reloadPlayerPatch(newCap);
+            RenderEngine.getInstance().initHUD(newCap);
+        }
     }
 
     public static void onPlayerLoggedOut(LocalPlayer player) {
