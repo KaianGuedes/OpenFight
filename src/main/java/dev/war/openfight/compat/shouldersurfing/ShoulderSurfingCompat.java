@@ -1,12 +1,11 @@
 package dev.war.openfight.compat.shouldersurfing;
 
-import com.github.exopandora.shouldersurfing.api.callback.ICameraCouplingCallback;
 import com.github.exopandora.shouldersurfing.api.client.IShoulderSurfing;
-import com.github.exopandora.shouldersurfing.api.client.ShoulderSurfing;
+import com.github.exopandora.shouldersurfing.api.client.event.ComputeCameraCouplingEvent;
+import com.github.exopandora.shouldersurfing.api.client.event.handler.ComputeCameraCouplingEventHandler;
+import com.github.exopandora.shouldersurfing.api.event.IEventBus;
 import com.github.exopandora.shouldersurfing.api.plugin.IShoulderSurfingPlugin;
-import com.github.exopandora.shouldersurfing.api.plugin.IShoulderSurfingRegistrar;
 import net.minecraft.client.CameraType;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.util.Mth;
 import net.minecraft.world.phys.Vec3;
@@ -50,10 +49,14 @@ import dev.war.openfight.world.capabilities.EpicFightCapabilities;
 /// - [Handle Epic Fight Breaking Changes from Shoulder Surfing's side](https://github.com/Exopandora/ShoulderSurfing/issues/359)
 @SuppressWarnings("unused") // Referenced in src/main/resources/shouldersurfing_plugin.json
 public class ShoulderSurfingCompat implements IShoulderSurfingPlugin {
+    /// Handlers must run after Shoulder Surfing's built-in coupling rule (priority 1000).
+    private static final int HANDLER_PRIORITY = 2000;
+
+    /// Called by Shoulder Surfing's plugin loader, which only runs when the `shouldersurfing` mod is loaded.
     @Override
-    public void register(IShoulderSurfingRegistrar registrar) {
+    public void register(IEventBus eventBus) {
         disableEpicFightCamera();
-        registerShoulderSurfingEvents(registrar);
+        registerShoulderSurfingEvents(eventBus);
         registerEpicFightEvents();
     }
 
@@ -61,9 +64,8 @@ public class ShoulderSurfingCompat implements IShoulderSurfingPlugin {
         EpicFightTpsCameraDisableState.disable(EpicFightTpsCameraDisabledReason.ShoulderSurfing);
     }
 
-    private void registerShoulderSurfingEvents(IShoulderSurfingRegistrar registrar) {
-        registrar.registerCameraCouplingCallback(new CameraCouplingOnAttack());
-        registrar.registerCameraCouplingCallback(new CameraCouplingOnChargingSkill());
+    private void registerShoulderSurfingEvents(IEventBus eventBus) {
+        eventBus.register(HANDLER_PRIORITY, (ComputeCameraCouplingEventHandler) ShoulderSurfingCompat::computeCameraCoupling);
     }
 
     private void registerEpicFightEvents() {
@@ -71,29 +73,23 @@ public class ShoulderSurfingCompat implements IShoulderSurfingPlugin {
         EpicFightClientEventHooks.Camera.LOCK_ON_TICK.registerEvent(ShoulderSurfingCompat::lockOnTick);
     }
 
-    private static class CameraCouplingOnAttack implements ICameraCouplingCallback {
-        @Override
-        public boolean isForcingCameraCoupling(Minecraft minecraft) {
-            return InputManager.isActionActive(EpicFightInputAction.ATTACK) || InputManager.isActionActive(MinecraftInputAction.ATTACK_DESTROY);
+    /// Forces camera coupling while attacking or holding (charging) a skill, so the player turns towards the crosshair.
+    private static void computeCameraCoupling(ComputeCameraCouplingEvent event) {
+        if (InputManager.isActionActive(EpicFightInputAction.ATTACK) || InputManager.isActionActive(MinecraftInputAction.ATTACK_DESTROY)) {
+            event.setResult(true);
+            return;
         }
-    }
 
-    private static class CameraCouplingOnChargingSkill implements ICameraCouplingCallback {
-        @Override
-        public boolean isForcingCameraCoupling(Minecraft minecraft) {
-            final LocalPlayerPatch localPlayerPatch = EpicFightCapabilities.getCachedLocalPlayerPatch();
-            if (localPlayerPatch == null) {
-                return false;
-            }
+        final LocalPlayerPatch localPlayerPatch = EpicFightCapabilities.getCachedLocalPlayerPatch();
 
-            // Forces camera coupling when the player is holding any holdable skill,
-            // including Demolition Leap, without directly referencing specific skills.
-            return localPlayerPatch.isHoldingAny();
+        // Includes Demolition Leap without directly referencing specific skills.
+        if (localPlayerPatch != null && localPlayerPatch.isHoldingAny()) {
+            event.setResult(true);
         }
     }
 
     private static void buildCameraTransform(BuildCameraTransform.Pre event) {
-        final IShoulderSurfing shoulderSurfing = ShoulderSurfing.getInstance();
+        final IShoulderSurfing shoulderSurfing = IShoulderSurfing.getInstance();
 
         // Prevents Epic Fight from applying camera transform modifications to Shoulder Surfing's perspective
         if (shoulderSurfing.isShoulderSurfing()) {
@@ -115,7 +111,7 @@ public class ShoulderSurfingCompat implements IShoulderSurfingPlugin {
     }
 
     private static void lockOnTick(LockOnEvent.Tick event) {
-        final IShoulderSurfing instance = ShoulderSurfing.getInstance();
+        final IShoulderSurfing instance = IShoulderSurfing.getInstance();
 
         // Calculates lock-on rotations based on the SSR's camera position, store those rotations to Epic Fight camera API's rotations
         // since they will eventually be written to SSR's camera rotation in BUILD_TRANSFORM_PRE.
@@ -127,7 +123,7 @@ public class ShoulderSurfingCompat implements IShoulderSurfingPlugin {
         final double toTargetDistanceSqr = localPlayer.position().distanceToSqr(event.getLockOnTarget().position());
 
         // Leaps the start and end location of the camera arm for lock-on based on the distance between the player and the focusing entity
-        final Vec3 lockStart = MathUtils.lerpVector(localPlayer.getEyePosition(), event.getCameraApi().getMinecraft().gameRenderer.mainCamera().getPosition(), (float) Mth.clampedMap(toTargetDistanceSqr, 1.0F, 18.0F, 0.2F, 1.0F));
+        final Vec3 lockStart = MathUtils.lerpVector(localPlayer.getEyePosition(), event.getCameraApi().getMinecraft().gameRenderer.mainCamera().position(), (float) Mth.clampedMap(toTargetDistanceSqr, 1.0F, 18.0F, 0.2F, 1.0F));
         final Vec3 lockEnd = MathUtils.lerpVector(event.getLockOnTarget().getEyePosition(), event.getLockOnTarget().getBoundingBox().getCenter(), (float) Mth.clampedMap(toTargetDistanceSqr, 0.0F, 18.0F, 0.5F, 1.0F));
 
         final float clamp = 30.0F;

@@ -1,3 +1,5 @@
 {
-  "entrypoint": "dev.war.openfight.compat.shouldersurfing.ShoulderSurfingCompat"
+  "entrypoints": [
+    "dev.war.openfight.compat.shouldersurfing.ShoulderSurfingCompat"
+  ]
 }
