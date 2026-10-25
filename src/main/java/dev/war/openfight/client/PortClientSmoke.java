@@ -244,7 +244,11 @@ public final class PortClientSmoke {
                 EpicFightMod.LOGGER.info("PORT_SMOKE_WORLD_COMBAT_COMPLETE ticks={} attacks={} weaponSwitches={} modeToggles={}", combatTicks, attackCount, weaponSwitchCount, modeToggleCount);
             }
             combatPlayerId = null;
-            smokeClient.execute(smokeClient::stop);
+            if (PortRespawnSmoke.enabled() && attackCount >= 20) {
+                smokeClient.execute(() -> PortRespawnSmoke.begin(smokeClient, server));
+            } else {
+                smokeClient.execute(smokeClient::stop);
+            }
         }
     }
 
