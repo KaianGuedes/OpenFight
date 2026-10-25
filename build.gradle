@@ -15,6 +15,12 @@ dependencies {
     compileOnly 'maven.modrinth:YL57xq9U:vTN4NRGW' // Iris 1.11.7 for Fabric 26.3
     runtimeOnly 'maven.modrinth:YL57xq9U:vTN4NRGW'
     runtimeOnly 'maven.modrinth:sodium:g6ju16VJ' // Sodium mc26.3-0.9.3-beta.1
+    compileOnly 'maven.modrinth:shoulder-surfing-reloaded:sEg9bfXx' // Shoulder Surfing Reloaded 26.3-5.2.0 (Fabric), compat plugin API only
+    // Dev runtime only on request (-PwithShoulderSurfing) so the default smoke run stays vanilla-camera.
+    if (project.hasProperty('withShoulderSurfing')) {
+        runtimeOnly 'maven.modrinth:shoulder-surfing-reloaded:sEg9bfXx'
+        runtimeOnly 'maven.modrinth:forge-config-api-port:JpKvrr9J' // required by Shoulder Surfing Reloaded
+    }
 }
 java { toolchain { languageVersion = JavaLanguageVersion.of(25) } }
 tasks.withType(JavaCompile).configureEach {
@@ -25,7 +31,8 @@ tasks.withType(JavaCompile).configureEach {
 sourceSets.main.resources.srcDir('src/generated/resources')
 // TASK.md explicitly omits optional integrations and datagen. Combat, skills and rendering remain in main.
 sourceSets.main.java {
-    exclude 'dev/war/openfight/compat/*/**'
+    // Only the Shoulder Surfing compat is compiled; it is loaded reflectively by SSR's plugin loader (shouldersurfing_plugin.json).
+    exclude { it.file.isFile() && it.relativePath.pathString.startsWith('dev/war/openfight/compat/') && !it.relativePath.pathString.startsWith('dev/war/openfight/compat/shouldersurfing/') }
     exclude 'dev/war/openfight/platform/neoforge/**'
     exclude 'dev/war/openfight/data/DataEvents.java', 'dev/war/openfight/data/recipes/**', 'dev/war/openfight/data/tags/**'
 }
@@ -83,7 +90,7 @@ tasks.register('verifyPortConfig', JavaExec) {
 tasks.processResources {
     inputs.dir(file('upstream/src/main/resources/assets/epicfight/models/item'))
     exclude 'META-INF/**', 'epicfight-compat.*.mixins.json', 'epicfight-platform.neoforge.mixins.json'
-    exclude 'kubejs.plugins.txt', 'shouldersurfing_plugin.json'
+    exclude 'kubejs.plugins.txt'
     exclude 'assets/minecraft/animated_layers/player/waveycapes.json'
     exclude 'data/**/recipes/**', 'data/**/loot_tables/**', 'data/**/advancements/**'
     exclude 'data/**/tags/items/**', 'data/**/tags/blocks/**', 'data/**/tags/entity_types/**', 'data/**/tags/damage_types/**'
@@ -194,5 +201,5 @@ tasks.named('check') { dependsOn 'verifyPortConfig', 'verifyPortTransforms', 've
 
 // Explicit development-only title-screen smoke run, with runtime mixin audit and screenshot.
 if (providers.gradleProperty('portSmoke').isPresent()) {
-    loom.runs.client { vmArg '-Dopenfight.portSmoke=true'; vmArg '-Dmixin.debug.verbose=true' ; if (providers.gradleProperty('portScreens').isPresent()) { vmArg '-Dopenfight.smokeScreenshots=true' } }
+    loom.runs.client { vmArg '-Dopenfight.portSmoke=true'; vmArg '-Dmixin.debug.verbose=true' ; if (providers.gradleProperty('portScreens').isPresent()) { vmArg '-Dopenfight.smokeScreenshots=true' }; if (providers.gradleProperty('smokeRespawn').isPresent()) { vmArg '-Dopenfight.smokeRespawn=true' } }
 }

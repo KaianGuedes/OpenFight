@@ -4,6 +4,8 @@ from pathlib import Path
 parser=argparse.ArgumentParser()
 parser.add_argument('--timeout',type=int,default=360)
 parser.add_argument('--log',default='gameplay-smoke.log')
+parser.add_argument('--respawn',action='store_true',help='after combat, kill and respawn the player and assert movement input still moves them (-PsmokeRespawn)')
+parser.add_argument('--shoulder-surfing',action='store_true',help='load Shoulder Surfing Reloaded in the dev client (-PwithShoulderSurfing) and assert the compat plugin registered')
 args=parser.parse_args()
 root=Path(__file__).resolve().parents[1]
 env=dict(os.environ)
@@ -29,7 +31,7 @@ options_path.write_text('\n'.join(lines) + '\n', encoding='utf-8')
 log=root/args.log
 started_at=time.time()
 with log.open('wb') as output:
- process=subprocess.Popen([str(root/'gradlew.bat'),'--no-daemon','--console=plain','runClient','-PportSmoke'],cwd=root,env=env,stdout=output,stderr=subprocess.STDOUT)
+ process=subprocess.Popen([str(root/'gradlew.bat'),'--no-daemon','--console=plain','runClient','-PportSmoke']+(['-PsmokeRespawn'] if args.respawn else [])+(['-PwithShoulderSurfing'] if args.shoulder_surfing else []),cwd=root,env=env,stdout=output,stderr=subprocess.STDOUT)
  try:code=process.wait(timeout=args.timeout)
  except subprocess.TimeoutExpired:
   subprocess.run(['taskkill','/PID',str(process.pid),'/T','/F'],stdout=subprocess.DEVNULL,stderr=subprocess.DEVNULL)
@@ -37,6 +39,8 @@ with log.open('wb') as output:
   sys.exit(124)
 text=log.read_text(encoding='utf-8',errors='replace')
 markers=['PORT_SMOKE_MIXIN_AUDIT_COMPLETE','PORT_SMOKE_CLICK screen=TitleScreen','PORT_SMOKE_CLICK screen=CreateWorldScreen','PORT_SMOKE_PLAYER_JOINED','PORT_SMOKE_SKILL_DATA_REGISTERED key=epicfight:combo_counter connection=ready','PORT_SMOKE_COMBAT_STARTED','PORT_SMOKE_WORLD_COMBAT_COMPLETE ticks=600']
+if args.respawn: markers+=['PORT_SMOKE_MOVE_BASELINE','PORT_SMOKE_PLAYER_KILLED','PORT_SMOKE_PLAYER_RESPAWNED','PORT_SMOKE_RESPAWN_PATCH_REFRESHED','PORT_SMOKE_RESPAWN_MOVEMENT_OK']
+if args.shoulder_surfing: markers+=['Epic Fight TPS mode has been disabled due to a mod conflict with Shoulder Surfing']
 missing=[marker for marker in markers if marker not in text]
 runtime_log=root/'run/logs/latest.log'
 runtime_text=runtime_log.read_text(encoding='utf-8',errors='replace') if runtime_log.exists() else ''
