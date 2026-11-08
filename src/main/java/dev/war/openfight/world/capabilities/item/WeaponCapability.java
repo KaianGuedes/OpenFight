@@ -445,7 +445,7 @@ public class WeaponCapability extends CapabilityItem {
             copy.passiveSkill = this.passiveSkill;
             copy.offHandAlone = this.offHandAlone;
             copy.collider = this.collider;
-            copy.attributeMap.putAll(this.attributeMap);
+            putAllAttributes(copy.attributeMap, this.attributeMap);
 
             copy.swingSound = this.swingSound;
             copy.hitSound = this.hitSound;
@@ -900,7 +900,7 @@ public class WeaponCapability extends CapabilityItem {
 
     public static void applyWeapon(Builder result, CapabilityItem.Builder<?> builder) {
         if (builder.attributeMap != null) {
-            result.attributeMap.putAll(builder.attributeMap);
+            CapabilityItem.Builder.putAllAttributes(result.attributeMap, builder.attributeMap);
         }
         if (builder.category != null) {
             result.category = builder.category;

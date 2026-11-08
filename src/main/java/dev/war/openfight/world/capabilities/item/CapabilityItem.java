@@ -627,7 +627,7 @@ public class CapabilityItem {
 			Builder<T> result = new Builder<>();
 			result.parent = this.parent;
 			result.identifier = this.identifier;
-			result.attributeMap = this.attributeMap;
+			putAllAttributes(result.attributeMap, this.attributeMap);
 			result.category = this.category;
 			result.collider = this.collider;
 			return (T) result;
@@ -637,10 +637,17 @@ public class CapabilityItem {
 		{
 			builder.parent = this.parent;
 			builder.identifier = this.identifier;
-			builder.attributeMap = this.attributeMap;
+			builder.attributeMap = Maps.newHashMap();
+			putAllAttributes(builder.attributeMap, this.attributeMap);
 			builder.category = this.category;
 			builder.collider = this.collider;
 			builder.customData = this.customData;
+		}
+
+		/** Copies style attribute maps one level deeper than putAll so presets and the builders copied from them never share inner maps. */
+		protected static void putAllAttributes(Map<Style, Map<Holder<Attribute>, AttributeModifier>> destination, Map<Style, Map<Holder<Attribute>, AttributeModifier>> source)
+		{
+			source.forEach((style, attributes) -> destination.put(style, new HashMap<>(attributes)));
 		}
 
 		public T parent(Identifier parent)
@@ -752,7 +759,7 @@ public class CapabilityItem {
 				result.constructor = builder.constructor;
 			}
 			if (builder.attributeMap != null) {
-				result.attributeMap.putAll(builder.attributeMap);
+				putAllAttributes(result.attributeMap, builder.attributeMap);
 			}
 			if (builder.category != null) {
 				result.category = builder.category;
